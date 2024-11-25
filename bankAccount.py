@@ -11,9 +11,6 @@ from transaction import Transaction
 from abc import ABC, abstractmethod
 
 class BankAccount:
-    # A private class variable that holds the number of the next account value
-    _nextAccountVal = 1000
-    
     # A private class variable that holds the interest rates in decimal form 
     _intRates = {'checking': 0.015, 'savings': 0.04}
 
@@ -27,7 +24,7 @@ class BankAccount:
     #
     #  @ensure BankAccount object successfully created    
     # Hunter 
-    def __init__(self, balanceIn = 0.0, account_type = 'checking'):
+    def __init__(self, balanceIn = 0.0, account_type = 'checking', accountNum = 1000):
         # Assert statements for preconditions
         assert isinstance(balanceIn, float), "The balance must be a floating-point value."
         assert balanceIn >= 0.0, "The balance must be a positive value." 
@@ -36,10 +33,11 @@ class BankAccount:
         # Sets the instance variables
         self._accountNum = BankAccount._nextAccountVal
         # Updates the next account value
-        BankAccount._nextAccountVal += 1
         self._accountTransactions = []  # Container to store all transactions on an account
         self._balance = balanceIn
         self._accountType = account_type
+        self._accountNum = accountNum
+        self._nextTransaction = 100 # A private class variable that hold the number of the next transaction
 
     @abstractmethod
     # Deposits money into the bank account if the transaction is valid and records the transaction
