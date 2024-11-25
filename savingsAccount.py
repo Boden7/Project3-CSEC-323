@@ -24,8 +24,8 @@ class SavingsAccount(BankAccount):
     #  @param balanceIn: The starting balance of the Savings Account (Floating point)
     #
     #  @ensure SavingsAccount object successfully created    
-    def __init__(self, balanceIn = 0.0):
-        super().__init__(balanceIn, account_type = 'savings')
+    def __init__(self, balanceIn = 0.0, accountType = 'savings', accountNum = 1000):
+        super().__init__(balanceIn, accountType, accountNum)
         self._overdrawnCount = 0  # Counter for overdrafts (savings only)
 
     # An accessor/getter method for the overdraft fee
