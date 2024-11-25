@@ -20,8 +20,8 @@ class CheckingAccount(BankAccount):
     #  @param balanceIn: The starting balance of the CHecking Account (Floating point)
     #
     #  @ensure CheckingAccount object successfully created
-    def __init__(self, balanceIn = 0.0):
-        super().__init__(balanceIn, account_type = 'checking')
+    def __init__(self, balanceIn = 0.0, accountType = 'checking', accountNum = 1000):
+        super().__init__(balanceIn, accountType , accountNum)
 
     # Deposits money into the account if the transaction is valid and records the transaction
     #
@@ -36,11 +36,12 @@ class CheckingAccount(BankAccount):
         assert(isinstance(amount, float))
         assert(amount > 0)
         # Process the transaction and update necessary variables
-        depositTransaction = Transaction("deposit", amount)
+        depositTransaction = Transaction("deposit", amount, self._nextTransaction)
         # add deposit to list of transactions
         self._accountTransactions.append(depositTransaction)
         self._writeTransaction(depositTransaction)
         self._balance += amount
+        self._nextTransaction += 1
         return True
 
     # Withdraws money from the account if the transaction is valid and records the transaction
@@ -56,11 +57,12 @@ class CheckingAccount(BankAccount):
         assert(amount > 0)
         assert self._balance >= amount, "Withdrawal denied: insufficient funds."
         # Process the transaction and update necessary variables
-        withdrawalTransaction = Transaction("withdrawal", amount)
+        withdrawalTransaction = Transaction("withdrawal", amount, self._nextTransaction)
         # add withdrawal to list of transactions
         self._accountTransactions.append(withdrawalTransaction)
         self._writeTransaction(withdrawalTransaction)
         self._balance -= amount
+        self._nextTransaction += 1
         return True
 
     # Transfer an amount of money from one account to another
@@ -73,10 +75,11 @@ class CheckingAccount(BankAccount):
     def transfer(self, amount, otherAccount):
         assert self.withdraw(amount)
         otherAccount.deposit(amount)
-        transaction = Transaction("transfer", amount)
+        transaction = Transaction("transfer", amount, self._nextTransaction)
         # add transfer to list of transactions
         self._accountTransactions.append(transaction)
         self._writeTransaction(transaction)
+        self._nextTransaction += 1
         return True
 
     # Calculates the interest payment for a checking account, adds a new interest transaction
@@ -89,11 +92,12 @@ class CheckingAccount(BankAccount):
     def calcInterest(self):
         assert(self._balance > 0), "No interest can be added to an account with a negative balance."
         interest_amount = self._balance * BankAccount._intRates['checking']
-        transaction = Transaction("interest", interest_amount)
+        transaction = Transaction("interest", interest_amount, self._nextTransaction)
         # add interest to list of transactions
         self._accountTransactions.append(transaction)
         self._writeTransaction(transaction)
         self.deposit(interest_amount)
+        self._nextTransaction += 1
         return True
     
     # Prints a String representation of all transactions for a Checking Account object   
