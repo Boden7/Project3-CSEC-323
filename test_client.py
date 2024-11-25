@@ -264,10 +264,13 @@ class TestClient(unittest.TestCase):
         print("\nTesting to ensure that closeBankAccount() works as intended")
         
         # Adds a new bank account to delete
-        self.client1.openBankAccount('checking', 100.0)        
+        self.client1.openBankAccount('checking', 100.0)
+        
+        # Pulls out the bank account from the client's account list
+        accountClose = self.client1._bankAccounts[1]
         
         # Attempts to close the new bank account
-        self.client1.closeBankAccount(1002)
+        self.client1.closeBankAccount(accountClose)
         
         # Pulls out the client account list
         clientList = self.client1.getClientAccounts()
@@ -280,19 +283,31 @@ class TestClient(unittest.TestCase):
         expectedList = [checkTest]        
         
         # Checks to ensure the bank account does not exist in the client account list anymore
-        self.assertEquals(clientList, expectedList)    
+        self.assertEquals(clientList, expectedList)
     
-    def test_closeBankAccountInvalidAccountNumber(self):
-        print("\nTesting to ensure that closeBankAccount() throws an assertion error when an invalid account number is passed in")
+    def test_closeBankAccountInvalidType(self):
+        print("\nTesting to ensure that closeBankAccount() does not allow improper types to be passed in") 
         
-        # Attempts to close a nonexistent bank account
-        self.assertRaises(AssertionError, self.client1.closeBankAccount, 1005)    
+        # Adds a new bank account
+        self.client1.openBankAccount('checking', 100.0)        
+        
+        # Attempts to pass in an integer (account number) instead of a BankAccount object
+        self.assertRaises(AssertionError, self.client1.closeBankAccount, 1000)    
+    
+    def test_closeBankAccountInvalidAccount(self):
+        print("\nTesting to ensure that closeBankAccount() throws an assertion error when an account not in the user's account list is passed in")
+        
+        # Adds a new bank account
+        self.client1.openBankAccount('checking', 100.0)
+        
+        # Attempts to close a bank account that doesn't exist
+        self.assertRaises(AssertionError, self.client1.closeBankAccount, SavingsAccount(250.0))    
 
     def test_closeBankAccountOneAccount(self):
         print("\nTesting to ensure that closeBankAccount() does not allow the closing of an account if the client only has one account") 
         
         # Attempts to close a bank account when there is only one account
-        self.assertRaises(AssertionError, self.client1.closeBankAccount, 1000)         
+        self.assertRaises(AssertionError, self.client1.closeBankAccount, self.client1._bankAccounts[0])        
 
 if __name__ == '__main__':
     unittest.main()
