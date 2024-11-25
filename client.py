@@ -46,6 +46,9 @@ class Client:
       self._name = name 
       self._address = address
       self._phoneNumber = phoneNumber
+
+      # A private class variable that holds the number of the next account value
+      self._nextAccountVal = 1000
       
       # Initializes the list of bank accounts as empty
       self._bankAccounts = []
@@ -71,14 +74,15 @@ class Client:
       
       # Creates either a new checking or savings account
       if (accountType == 'checking'):
-         account = CheckingAccount(balanceIn)
+         account = CheckingAccount(balanceIn, 'checking', self._nextAccountVal)
       else:
-         account = SavingsAccount(balanceIn)
+         account = SavingsAccount(balanceIn, 'savings', self._nextAccountVal)
       
-      # Adds the new account to the client's list of accounts
+      # Adds the new account to the client's list of accounts and update the next account number
       self._bankAccounts.append(account)
+      self._nextAccountVal += 1
 
-   # Closes a client's already existing bank account
+    # Closes a client's already existing bank account
    #
    #  @param account: The account to be deleted from the Client (BankAccount object)
    #
@@ -102,7 +106,7 @@ class Client:
       
       # Removes the account from the list and dereferences it
       self._bankAccounts.remove(account)
-      account = None   
+      account = None
 
    # Returns a list of the client's bank accounts
    #
