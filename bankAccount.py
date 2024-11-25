@@ -31,7 +31,7 @@ class BankAccount:
         assert account_type in ['checking', 'savings'], "Invalid account type."
 
         # Sets the instance variables
-        self._accountNum = BankAccount._nextAccountVal
+        self._accountNum = accountNum
         # Updates the next account value
         self._accountTransactions = []  # Container to store all transactions on an account
         self._balance = balanceIn
