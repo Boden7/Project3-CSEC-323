@@ -13,9 +13,7 @@ import datetime
 
 class Transaction:
    
-   _nextTransaction = 100 # A private class variable that hold the number of the next transaction
    DEBUG = False # A class constant that turns debugging printing on and off
-   RESET_TNUMBER = False # Ensures that transaction numbers don't reset each call
    _typeSet = {"deposit", "withdrawal", "interest", "transfer", "penalty"}
    
    # Constructs a transaction.
@@ -25,7 +23,7 @@ class Transaction:
    #  @ensure tType is in the set {"deposit", "withdrawl", "interest", "transfer", "penalty"}
    #  @ensure date is a valid date
    # Boden
-   def __init__(self, tType, amount = 0.0) :
+   def __init__(self, tType, amount = 0.0, tNumber = 100) :
       # Assert statements for preconditions
       assert(isinstance(amount, float)), "The amount must be a floating-point value."
       assert amount >= 0, "The amount must be a positive numerical value."
@@ -35,12 +33,8 @@ class Transaction:
       if Transaction.DEBUG:
          print ("Creating a new transaction")
          
-      if Transaction.RESET_TNUMBER:
-         Transaction._nextTransaction = 100 
-         
-      # Set the transaction number and increment the next transaction class variable
-      self._tNumber = Transaction._nextTransaction
-      Transaction._nextTransaction = Transaction._nextTransaction + 1      
+      # Set the transaction number
+      self._tNumber = tNumber    
       
       # Set the tType 
       self._tType = tType
@@ -128,12 +122,6 @@ class Transaction:
    # @return: The transaction type of the transaction
    def getTType(self) :
       return self._tType
-
-   # Anna
-   # Returns the next available transaction number
-   # @return: The next available transaction number
-   def getNextTNumber(self):
-       return Transaction._nextTransaction
    
    # Prints all of the transaction instance variables.
    def printTransaction(self):
