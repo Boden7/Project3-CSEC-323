@@ -80,44 +80,29 @@ class Client:
 
    # Closes a client's already existing bank account
    #
-   #  @param accountNum: The account number to be deleted from the Client (int)
+   #  @param account: The account to be deleted from the Client (BankAccount object)
    #
+   #  @require The account passed in must be a valid BankAccount type (checking or savings)
    #  @require The list of bank accounts must be greater than 1 to close an account   
    #  @require BankAccount object associated with the account number must already be stored in the client account
    # Anna
-   def closeBankAccount(self, accountNum: int): #Update in group file
-      # Length assert statement
+   def closeBankAccount(self, account: BankAccount):
+      # Assert statements
+      assert isinstance(account, BankAccount), "Must pass in a valid bank account to delete."
+      assert account in self._bankAccounts, "The bank account must exist in the client's account list."
       assert len(self._bankAccounts) > 1, "Cannot delete a client's only account."
       
-      # Sets a false flag
-      checkNum = False
-      
-      # Loops through the client's account list
-      index = 0
-      while index < len(self._bankAccounts):
-         # If the account number is in the list
-         if self._bankAccounts[index].getAccountNumber() == accountNum:
-            checkNum = True
-            account = self._bankAccounts[index]
-         index = index + 1
-      
-      # Assert statement
-      assert checkNum == True, "Account not found."
-      
       # Withdraw all funds and remove the account: 
-      print(f"Withdrawing all funds from account: {accountNum}.")
-      
-      # Determines how much money is currently being stored within the account
-      accountBal = account.getBalance()
+      print(f"Withdrawing all funds from account: {account.getAccountNumber()}.")
       
       # Withdraws the full account balance from the account
-      account.withdraw(accountBal)
+      account.withdraw(account.getBalance())
       
-      print(f"Account {accountNum} closed.")
+      print(f"Account {account.getAccountNumber()} closed.")
       
       # Removes the account from the list and dereferences it
       self._bankAccounts.remove(account)
-      account = None
+      account = None   
 
    # Returns a list of the client's bank accounts
    #
