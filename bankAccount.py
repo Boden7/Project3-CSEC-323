@@ -81,6 +81,13 @@ class BankAccount:
     # Boden
     def getAccountType(self):
         return self._accountType
+    
+    # Accessor/getter to retrieve the account number
+    #
+    #  @return: The account number associated with the Bank Account (integer)    
+    # Anna 
+    def getAccountNumber(self):
+        return self._accountNum    
         
     # Accessor/getter to retrieve the balance of an account
     #
@@ -89,9 +96,9 @@ class BankAccount:
     def getBalance(self):
         return self._balance
 
-    # Accessor/getter to retrieve the account number
+    # Accessor/getter to retrieve the transaction number
     #
-    #  @return: The account number associated with the Bank Account (integer)    
+    #  @return: The next transaction number to be associated with the Bank Account (integer)    
     # Anna 
     def getNextTransactionNum(self):
         return self._nextTransaction
