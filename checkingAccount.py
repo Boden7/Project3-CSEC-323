@@ -20,8 +20,8 @@ class CheckingAccount(BankAccount):
     #  @param balanceIn: The starting balance of the CHecking Account (Floating point)
     #
     #  @ensure CheckingAccount object successfully created
-    def __init__(self, balanceIn = 0.0, accountType = 'checking', accountNum = 1000):
-        super().__init__(balanceIn, accountType , accountNum)
+    def __init__(self, balanceIn = 0.0, accountType = 'checking', _accountNum = 1000,  _clientNum = 100):
+        super().__init__(balanceIn, accountType , _accountNum, _clientNum)
 
     # Deposits money into the account if the transaction is valid and records the transaction
     #
@@ -125,7 +125,8 @@ class CheckingAccount(BankAccount):
             print("The length of the Initialization Vector is %d bytes" % len(iv))
 
         # Open the file to write the data
-        with open("checking.txt", "wb") as outfile:
+        fileName = f"checking-{self._clientNum}-{self._accountNum}.txt"
+        with open(fileName, "wb") as outfile:
             # Convert transaction to string, then encrypt
             transaction_str = str(transaction)
             # Encrypt the transaction data
@@ -151,7 +152,8 @@ class CheckingAccount(BankAccount):
         iv = b'MySuperSecretIV1'
 
         # Open the file to read the data
-        with open("checking.txt", "rb") as infile:
+        fileName = f"checking-{self._clientNum}-{self._accountNum}.txt"
+        with open(fileName, "rb") as infile:
             length = infile.readline().rstrip().decode()
 
             while length != "":
