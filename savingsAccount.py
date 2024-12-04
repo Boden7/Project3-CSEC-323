@@ -24,8 +24,8 @@ class SavingsAccount(BankAccount):
     #  @param balanceIn: The starting balance of the Savings Account (Floating point)
     #
     #  @ensure SavingsAccount object successfully created    
-    def __init__(self, balanceIn = 0.0, accountType = 'savings', accountNum = 1000):
-        super().__init__(balanceIn, accountType, accountNum)
+    def __init__(self, balanceIn = 0.0, accountType = 'savings', _accountNum = 1000, _clientNum = 100):
+        super().__init__(balanceIn, accountType, _accountNum, _clientNum)
         self._overdrawnCount = 0  # Counter for overdrafts (savings only)
 
     # An accessor/getter method for the overdraft fee
@@ -166,7 +166,8 @@ class SavingsAccount(BankAccount):
             print("The length of the Initialization Vector is %d bytes" % len(iv))
 
         # Open the file to write the data
-        with open("savings.txt", "wb") as outfile:
+        fileName = f"savings-{self._clientNum}-{self._accountNum}.txt"
+        with open(fileName, "wb") as outfile:
             # Convert transaction to string, then encrypt
             transaction_str = str(transaction)
             # Encrypt the transaction data
@@ -191,7 +192,8 @@ class SavingsAccount(BankAccount):
         iv = b'MySuperSecretIV1'
 
         # Open the file to read the data
-        with open("savings.txt", "rb") as infile:
+        fileName = f"savings-{self._clientNum}-{self._accountNum}.txt"
+        with open(fileName, "rb") as infile:
             length = infile.readline().rstrip().decode()
 
             while length != "":
