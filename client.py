@@ -13,18 +13,10 @@ from phoneNumber import PhoneNumber
 from bankAccount import BankAccount
 from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
-import os 
-import hashlib
 from AES_CBC import encrypt_AES_CBC
 
 # Hunter
 class Client:
-   
-   # Define the Class Constants
-   PEPPER = "SHELBY_MADE"
-   PASS_MIN_LEN = 8
-   PASS_MAX_LEN = 16
-   bad_Chars = {"/", "\\", "<", ">", "|", ""}
 
 
    clientCounter = 100 # client number set to monotonically increase
@@ -42,18 +34,13 @@ class Client:
    #  @require accountType is in the type list supplied
    #
    #  @ensure Client object successfully created   
-   def __init__(self, password, name: Name, address: Address, phoneNumber: PhoneNumber, accountType: str):
+   def __init__(self, name: Name, address: Address, phoneNumber: PhoneNumber, accountType: str):
       
       # Assert statements
       assert isinstance(name, Name), "The name must be of the Name type."
       assert isinstance(address, Address), "The address must be of the Address type."
       assert isinstance(phoneNumber, PhoneNumber), "The phone number must be of the PhoneNumber type."
       assert accountType in ['checking', 'savings'], "The account type must be either checking or savings."
-      
-      assert isinstance(password, str), "Invalid type"
-      assert Client.PASS_MIN_LEN <= len(password) <= Client.PASS_MAX_LEN, "Invalid length"
-      assert _checkSyntax(password)
-      self._createSecureHash(password)
       
       self._clientNumber = Client.clientCounter
       Client.clientCounter += 1 # monotonically increase client number with each new instance of a client
@@ -77,37 +64,6 @@ class Client:
          self.newSave = SavingsAccount(1000, self._clientNumber, 0.0, 'savings')
          
          self._bankAccounts.append(self.newSave)
-
-   # Method to securly hash the password
-   # @parameter: the password to hash
-   # @require: 8 <= len(password) <= 16
-   # @require: password does not contain "/", "\\", "<", ">", "|"
-   def _createSecureHash(self, password):
-      assert isinstance(password, str), "Invalid type"
-      assert Client.PASS_MIN_LEN <= len(password) <= Client.PASS_MAX_LEN, "Invalid length"
-      assert _checkSyntax(password)
-      self._salt = os.urandom(16)
-      self._iterations = 100_000
-      self._hash_algo = 'sha256'
-      hash_value = hashlib.pbkdf2_hmac(self._hash_algo, \
-         password.encode('utf-8') + Client.PEPPER.encode('utf-8'), self._salt, self._iterations)
-      self._hash = hash_value
-
-
-   # Private method to check a password against the stored hash
-   # @parameter: password - the string passed in containing the password to check
-   # @require: 8 <= len(password) <= 16
-   # @require: password does not contain "/", "\\", "<", ">", "|"
-   def _checkPassword(self, password):
-      #Assertions to check password type, length, and syntax
-      assert isinstance(password, str), "Invalid type"
-      assert Client.PASS_MIN_LEN <= len(password) <= Client.PASS_MAX_LEN, "Invalid length"
-      assert _checkSyntax(password)
-      # Compute the hash from password entered
-      passswordHash = hashlib.pbkdf2_hmac(self._hash_algo,\
-         password.encode('utf-8') + Client.PEPPER.encode('utf-8'), self._salt, self._iterations)
-      # Compare the computed hash and the stored hash and return the result
-      return (passswordHash == self._hash)
     
    # Method to write and store client passwords for their accounts to a file
    # Data is encrypted first
@@ -309,13 +265,3 @@ class Client:
       # Compare immutable variables
       return (self._clientNumber == other._clientNumber)
    
-# private helper function to check the password for prohibitied characters
-# @parameter: password - the string passed in containing the password
-# @require: 8 <= len(password) <= 16
-def _checkSyntax(password):
-   assert isinstance(password, str), "Invalid type"
-   assert Client.PASS_MIN_LEN <= len(password) <= Client.PASS_MAX_LEN, "Invalid length"
-   result = True
-   for element in password:
-      result = result and element not in Client.bad_Chars
-   return result
