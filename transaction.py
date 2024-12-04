@@ -23,7 +23,7 @@ class Transaction:
    #  @ensure tType is in the set {"deposit", "withdrawl", "interest", "transfer", "penalty"}
    #  @ensure date is a valid date
    # Boden
-   def __init__(self, tType, amount = 0.0, tNumber = 100) :
+   def __init__(self, tType, tNumber, amount = 0.0) :
       # Assert statements for preconditions
       assert(isinstance(amount, float)), "The amount must be a floating-point value."
       assert amount >= 0, "The amount must be a positive numerical value."
