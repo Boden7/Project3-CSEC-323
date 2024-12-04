@@ -20,8 +20,8 @@ class CheckingAccount(BankAccount):
     #  @param balanceIn: The starting balance of the CHecking Account (Floating point)
     #
     #  @ensure CheckingAccount object successfully created
-    def __init__(self, balanceIn = 0.0, accountType = 'checking', accountNum = 1000,  clientNum = 100):
-        super().__init__(balanceIn, accountType , accountNum, clientNum)
+    def __init__(self, accountNum, clientNum, balanceIn = 0.0, accountType = 'checking'):
+        super().__init__(accountNum, clientNum, balanceIn, accountType)
 
     # Deposits money into the account if the transaction is valid and records the transaction
     #
@@ -36,12 +36,11 @@ class CheckingAccount(BankAccount):
         assert(isinstance(amount, float))
         assert(amount > 0)
         # Process the transaction and update necessary variables
-        depositTransaction = Transaction("deposit", amount, self._nextTransaction)
+        depositTransaction = Transaction("deposit", self.getNextTransactionNum(), amount)
         # add deposit to list of transactions
         self._accountTransactions.append(depositTransaction)
         self._writeTransaction(depositTransaction)
         self._balance += amount
-        self._nextTransaction += 1
         return True
 
     # Withdraws money from the account if the transaction is valid and records the transaction
@@ -57,12 +56,11 @@ class CheckingAccount(BankAccount):
         assert(amount > 0)
         assert self._balance >= amount, "Withdrawal denied: insufficient funds."
         # Process the transaction and update necessary variables
-        withdrawalTransaction = Transaction("withdrawal", amount, self._nextTransaction)
+        withdrawalTransaction = Transaction("withdrawal", self.getNextTransactionNum(), amount)
         # add withdrawal to list of transactions
         self._accountTransactions.append(withdrawalTransaction)
         self._writeTransaction(withdrawalTransaction)
         self._balance -= amount
-        self._nextTransaction += 1
         return True
 
     # Transfer an amount of money from one account to another
@@ -72,14 +70,13 @@ class CheckingAccount(BankAccount):
     #
     #  @return: True if the money was able to be transferred and False if not
     # Boden
-    def transfer(self, amount, otherAccount):
+    def transfer(self, amount, otherAccount: BankAccount):
         assert self.withdraw(amount)
         otherAccount.deposit(amount)
-        transaction = Transaction("transfer", amount, self._nextTransaction)
+        transaction = Transaction("transfer", self.getNextTransactionNum(), amount)
         # add transfer to list of transactions
         self._accountTransactions.append(transaction)
         self._writeTransaction(transaction)
-        self._nextTransaction += 1
         return True
 
     # Calculates the interest payment for a checking account, adds a new interest transaction
@@ -91,13 +88,12 @@ class CheckingAccount(BankAccount):
     # Hunter
     def calcInterest(self):
         assert(self._balance > 0), "No interest can be added to an account with a negative balance."
-        interest_amount = self._balance * BankAccount._intRates['checking']
-        transaction = Transaction("interest", interest_amount, self._nextTransaction)
+        interestAmount = self._balance * BankAccount._intRates['checking']
+        transaction = Transaction("interest", self.getNextTransactionNum(), interestAmount)
         # add interest to list of transactions
         self._accountTransactions.append(transaction)
         self._writeTransaction(transaction)
-        self.deposit(interest_amount)
-        self._nextTransaction += 1
+        self.deposit(interestAmount)
         return True
     
     # Prints a String representation of all transactions for a Checking Account object   
@@ -138,6 +134,8 @@ class CheckingAccount(BankAccount):
             outfile.write(encrypted_data)
             outfile.write(b"\n")
 
+        self._nextTransaction += 1
+
         if DEBUG:
             print(f"Transactions written to checking-{self._clientNum}-{self._accountNum}.txt.")
 
@@ -172,7 +170,7 @@ class CheckingAccount(BankAccount):
     #
     # @return: A String representation of the Checking Account object (String)    
     def __repr__(self):
-        details = (f"Account Number: {super().getAccountNumber()}\n"
+        details = (f"Account Number: {self._accountNum}\n"
                     f"Balance: {self._balance:.2f}\n"
                     f"Account Type: '{super().getAccountType()}'\n"
                     f"Transactions:\n{super().printTransactionList()}")
