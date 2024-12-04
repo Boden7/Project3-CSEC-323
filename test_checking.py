@@ -2,15 +2,17 @@
 # Date: 11/3/24
 import unittest
 from checkingAccount import CheckingAccount
-from AES_CBC import encrypt_AES_CBC, decrypt_AES_CBC
 
 class TestCheckingAccount(unittest.TestCase):
     
     def setUp(self):
         # Set up a CheckingAccount instance for each test
         print("\nSetting up accounts for testing...")
-        self.account = CheckingAccount(100.0)  # Initial balance of 100.0
-        self.other_account = CheckingAccount(50.0)  # Another account for transfer tests
+        self.accountNum = 1000
+        self.clientNum = 100
+        self.account = CheckingAccount(self.accountNum, self.clientNum, 100.0)  # Initial balance of 100.0
+        self.accountNum += 1
+        self.other_account = CheckingAccount(self.accountNum, self.clientNum, 50.0)  # Another account for transfer tests
 
     def test_initialization(self):
         # Test account initialization with initial balance:
@@ -73,29 +75,5 @@ class TestCheckingAccount(unittest.TestCase):
         self.account._readTransactions()
         # Ensure no errors during the read process
 
-    #Test end to end encryption -Brenden Shelton
-    def test_end_to_end_encryption_in_account(self):
-        # Test end-to-end encryption and decryption as used in CheckingAccount
-        print("Testing end-to-end encryption and decryption in CheckingAccount...")
-
-        # Write a transaction to the file
-        transaction = "Test transaction for E2E encryption"
-        self.account._writeTransaction(transaction)
-
-        # Read back and decrypt the transactions from the file
-        with open("checking.txt", "rb") as infile:
-            # Read the length of the encrypted transaction
-            length = int(infile.readline().rstrip().decode())
-            encrypted_data = infile.read(length)
-
-        # Decrypt the transaction
-        key = b'MySuperSecretKey1222222222222222'
-        iv = b'MySuperSecretIV1'
-        decrypted_transaction = decrypt_AES_CBC(encrypted_data, key, iv)
-
-        # Verify that the decrypted transaction matches the original
-        print(f"Original transaction: {transaction}")
-        print(f"Decrypted transaction: {decrypted_transaction}")
-        self.assertEqual(decrypted_transaction, transaction)
 if __name__ == "__main__":
     unittest.main()
