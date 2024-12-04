@@ -15,11 +15,12 @@ from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
 import os 
 import hashlib
+from AES_CBC import encrypt_AES_CBC
 
 # Hunter
 class Client:
    
-   # Class Constants
+   # Define the Class Constants
    PEPPER = "SHELBY_MADE"
    PASS_MIN_LEN = 8
    PASS_MAX_LEN = 16
@@ -108,6 +109,38 @@ class Client:
       # Compare the computed hash and the stored hash and return the result
       return (passswordHash == self._hash)
     
+   # Method to write and store client passwords for their accounts to a file
+   # Data is encrypted first
+   #  @param password: The password to be written to the file
+   # Hunter 
+   def _WritePasswordToFile(self, password):
+      # Set the Debug Flag
+      DEBUG = False
+      # Encryption key (Ensure the key is 16, 24, or 32 bytes for AES-128, AES-192, or AES-256)
+      key = b'MySuperSecretKey1222222222222222'
+      # Initialization vector (Ensure the IV is 16 bytes)
+      iv = b'MySuperSecretIV1'
+
+      if DEBUG:
+         print("The length of the key is %d bytes" % len(key))
+         print("The length of the Initialization Vector is %d bytes" % len(iv))
+
+      # Open the file to write the data
+      with open("", "wb") as outfile:
+         # Convert transaction to string, then encrypt
+         password_str = str(password)
+         # Encrypt the transaction data
+         encrypted_data = encrypt_AES_CBC(password_str, key, iv)
+         # Write the length of the encrypted data to the file
+         outfile.write(str(len(encrypted_data)).encode())
+         outfile.write(b"\n")
+         # Write the encrypted data to the file
+         outfile.write(encrypted_data)
+         outfile.write(b"\n")
+
+      if DEBUG:
+         print("Password written to "".")
+
 
 
    # Opens a new client bank account
