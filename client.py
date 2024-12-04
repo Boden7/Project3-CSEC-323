@@ -55,19 +55,20 @@ class Client:
       
       # Creates an empty (balance = 0) banking account instance of the account type passed in
       if accountType == 'checking':
-         newCheck = CheckingAccount(0.0, 'checking', 1000, self._clientNumber)
+         self.newCheck = CheckingAccount(1000, self._clientNumber, 0.0, 'checking')
          
-         self._bankAccounts.append(newCheck)
+         self._bankAccounts.append(self.newCheck)
       else:
-         newSave = SavingsAccount(0.0, 'savings', 1000, self._clientNumber)
+         self.newSave = SavingsAccount(1000, self._clientNumber, 0.0, 'savings')
          
-         self._bankAccounts.append(newSave)
+         self._bankAccounts.append(self.newSave)
+
 
    # Opens a new client bank account
    #
    #  @param account: The new account to be added to the Client (BankAccount)
    #
-   #  @require accountType is in the type list supplied 
+   #  @require accountType is in the type list supplied
    #   
    #  @return account: the account that was created
    # Anna
@@ -76,9 +77,9 @@ class Client:
       
       # Creates either a new checking or savings account
       if (accountType == 'checking'):
-         account = CheckingAccount(balanceIn, 'checking', self._nextAccountVal, self._clientNumber)
+         account = CheckingAccount(self._nextAccountVal, self._clientNumber, balanceIn, 'checking')
       else:
-         account = SavingsAccount(balanceIn, 'savings', self._nextAccountVal, self._clientNumber)
+         account = SavingsAccount(self._nextAccountVal, self._clientNumber, balanceIn, 'savings')
       
       # Adds the new account to the client's list of accounts and update the next account number
       self._bankAccounts.append(account)
@@ -221,4 +222,3 @@ class Client:
       
       # Compare immutable variables
       return (self._clientNumber == other._clientNumber)
-   
