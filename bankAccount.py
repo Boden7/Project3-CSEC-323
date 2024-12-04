@@ -24,7 +24,7 @@ class BankAccount:
     #
     #  @ensure BankAccount object successfully created    
     # Hunter 
-    def __init__(self, balanceIn = 0.0, account_type = 'checking', accountNum = 1000, clientNum = 100):
+    def __init__(self, accountNum, clientNum, balanceIn = 0.0, account_type = 'checking'):
         # Assert statements for preconditions
         assert isinstance(balanceIn, float), "The balance must be a floating-point value."
         assert balanceIn >= 0.0, "The balance must be a positive value." 
@@ -93,15 +93,9 @@ class BankAccount:
     #
     #  @return: The account number associated with the Bank Account (integer)    
     # Anna 
-    def getAccountNumber(self):
-        return self._accountNum
+    def getNextTransactionNum(self):
+        return self._nextTransaction
 
-    # An accessor/getter method for the next available account value
-    #
-    #  @return: The next available bank account value (integer)   
-    # Hunter 
-    def getNextAccountNumber(self):
-        return BankAccount._nextAccountVal
     
     # An accessor/getter method for the interest rate
     #
