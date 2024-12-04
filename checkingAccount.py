@@ -20,8 +20,8 @@ class CheckingAccount(BankAccount):
     #  @param balanceIn: The starting balance of the CHecking Account (Floating point)
     #
     #  @ensure CheckingAccount object successfully created
-    def __init__(self, balanceIn = 0.0, accountType = 'checking', _accountNum = 1000,  _clientNum = 100):
-        super().__init__(balanceIn, accountType , _accountNum, _clientNum)
+    def __init__(self, balanceIn = 0.0, accountType = 'checking', accountNum = 1000,  clientNum = 100):
+        super().__init__(balanceIn, accountType , accountNum, clientNum)
 
     # Deposits money into the account if the transaction is valid and records the transaction
     #
