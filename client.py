@@ -17,7 +17,7 @@ from savingsAccount import SavingsAccount
 # Hunter
 class Client:
    
-   client_counter = 100 # client number set to monotonically increase
+   clientCounter = 100 # client number set to monotonically increase
    
    # Constructs a Client object.
    #
@@ -41,7 +41,7 @@ class Client:
       assert accountType in ['checking', 'savings'], "The account type must be either checking or savings."
       
       self._clientNumber = Client.client_counter
-      Client.client_counter += 1 # monotonically increase client number with each new instance of a client
+      Client.clientCounter += 1 # monotonically increase client number with each new instance of a client
 
       self._name = name 
       self._address = address
