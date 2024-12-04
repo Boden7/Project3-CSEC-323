@@ -180,7 +180,7 @@ class SavingsAccount(BankAccount):
             outfile.write(b"\n")
 
         if DEBUG:
-            print("Transactions written to savings.txt.")
+            print(f"Transactions written to savings--{self._clientNum}-{self._accountNum}.txt.")
 
     # Method to read all transactions made on a checking account to the checking.txt
     # file, data is decrypted first
