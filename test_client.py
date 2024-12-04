@@ -139,8 +139,7 @@ class TestClient(unittest.TestCase):
         checkClientAccounts = self.client1.getClientAccounts()
         
         # Initializes the exact values of the bank account stored in client1
-        checkTest = CheckingAccount(0.0)
-        checkTest._accountNum = 1000
+        checkTest = CheckingAccount(1000, self.client1.getClientNumber())
         
         # Creates the expected account list
         expected = [checkTest]
@@ -205,10 +204,8 @@ class TestClient(unittest.TestCase):
         checkList = self.client1.getClientAccounts()
         
         # Creates the exact same bank accounts
-        checkTest = CheckingAccount(0.0)
-        checkTest._accountNum = 1000
-        checkTest2 = CheckingAccount(100.0)
-        checkTest2._accountNum = 1002
+        checkTest = CheckingAccount(1000, self.client1.getClientNumber())
+        checkTest2 = CheckingAccount(1001, self.client1.getClientNumber())
         
         # The expected list
         expectedList = [checkTest, checkTest2]
@@ -226,10 +223,8 @@ class TestClient(unittest.TestCase):
         checkList = self.client1.getClientAccounts()
         
         # Creates the exact same bank accounts
-        checkTest = CheckingAccount(0.0)
-        checkTest._accountNum = 1000
-        checkTest2 = SavingsAccount(100.0)
-        checkTest2._accountNum = 1002
+        checkTest = CheckingAccount(1000, self.client1.getClientNumber())
+        checkTest2 = SavingsAccount(1001, self.client1.getClientNumber())
         
         # The expected list
         expectedList = [checkTest, checkTest2]
@@ -247,10 +242,8 @@ class TestClient(unittest.TestCase):
         checkList = self.client1.getClientAccounts()
         
         # Creates the exact same bank accounts
-        checkTest = CheckingAccount(0.0)
-        checkTest._accountNum = 1000
-        checkTest2 = CheckingAccount(0.0)
-        checkTest2._accountNum = 1002
+        checkTest = CheckingAccount(1000, self.client1.getClientNumber())
+        checkTest2 = CheckingAccount(1001, self.client1.getClientNumber())
         
         # The expected list
         expectedList = [checkTest, checkTest2]
@@ -262,23 +255,25 @@ class TestClient(unittest.TestCase):
         print("\nTesting to ensure that closeBankAccount() works as intended")
         
         # Adds a new bank account to delete
-        self.client1.openBankAccount('checking', 100.0)        
+        self.client1.openBankAccount('checking', 100.0)
+        
+        # Pulls out the bank account to close it
+        closeAccount = self.client1._bankAccounts[1]
         
         # Attempts to close the new bank account
-        self.client1.closeBankAccount(1002)
+        self.client1.closeBankAccount(closeAccount)
         
         # Pulls out the client account list
         clientList = self.client1.getClientAccounts()
         
         # Creates the exact same bank accounts
-        checkTest = CheckingAccount(0.0)
-        checkTest._accountNum = 1000  
+        checkTest = CheckingAccount(1000, self.client1.getClientNumber())
         
         # The expected list
         expectedList = [checkTest]        
         
         # Checks to ensure the bank account does not exist in the client account list anymore
-        self.assertEquals(clientList, expectedList)    
+        self.assertEqual(clientList, expectedList)    
     
     def test_closeBankAccountInvalidAccountNumber(self):
         print("\nTesting to ensure that closeBankAccount() throws an assertion error when an invalid account number is passed in")
