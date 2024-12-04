@@ -23,19 +23,17 @@ class TestTransaction(unittest.TestCase):
     
     DEPOSIT = 2000.00   # Expected Deposit amount
     WITHDRAWL = 500.00  # Expected Withdrawal amount
+    INTEREST = 100.00
     FIRST = 100      # Expected first transaction number
     TYPE = "deposit" # Expected Deposit transaction type
     
     # The setup method creates three transactions
-    def setUp(self):
-        # Resets the transaction number each time
-        Transaction._nextTransaction = 100
-        
-        self.transaction1 = Transaction("deposit", TestTransaction.DEPOSIT)
-        self.transaction2 = Transaction("withdrawal", TestTransaction.WITHDRAWL)
-        self.transaction3 = Transaction("interest")
-        self.transaction4 = Transaction("deposit")
-        self.transaction5 = Transaction("transfer", 500.00)
+    def setUp(self):        
+        self.transaction1 = Transaction("deposit", 100, TestTransaction.DEPOSIT)
+        self.transaction2 = Transaction("withdrawal", 101, TestTransaction.WITHDRAWL)
+        self.transaction3 = Transaction("interest", 102, TestTransaction.INTEREST)
+        self.transaction4 = Transaction("deposit", 103, 0.0)
+        self.transaction5 = Transaction("transfer", 104, 500.00)
 
     # The test_constructor method tests the constructor 
     def test_constructor(self):
@@ -48,7 +46,7 @@ class TestTransaction(unittest.TestCase):
     
     def test_constructorNoBalance(self):
         print("\nTesting the constructor without a balance parameter") 
-        self.assertEqual(self.transaction4.getAmount(), 0)
+        self.assertEqual(self.transaction4.getAmount(), 0.0)
         self.assertEqual(self.transaction4.getTNumber(), 103)
         self.assertEqual(self.transaction4.getTType(), "deposit")
         print("The transaction with no balance: ", self.transaction4)
@@ -116,7 +114,7 @@ class TestTransaction(unittest.TestCase):
         listTransactions = [self.transaction1, self.transaction2, self.transaction3]
         sumTest = sum(listTransactions)
         print("\nTesting the sum special method %d" % sumTest) 
-        self.assertEqual(sumTest, (TestTransaction.DEPOSIT + TestTransaction.WITHDRAWL))
+        self.assertEqual(sumTest, (TestTransaction.DEPOSIT + TestTransaction.WITHDRAWL + TestTransaction.INTEREST))
     
     # Anna
     def test_getDay(self):
@@ -204,22 +202,6 @@ class TestTransaction(unittest.TestCase):
         self.assertEqual(self.transaction2.getTType(), "withdrawal")
         self.assertEqual(self.transaction3.getTType(), "interest")
         self.assertEqual(self.transaction5.getTType(), "transfer")
-    
-    # Anna
-    def test_getNextTNumber(self):
-        print("\nTesting the getNextTNumber method")
-        
-        # Determines if the next transaction numbers are what are expected
-        # and that they are updating properly
-        # Since there have been 5 transactions created, the next transaction number
-        # should be 105
-        self.assertEqual(self.transaction1.getNextTNumber(), 105) 
-        
-        # Adds a new transaction
-        newTrans = Transaction("deposit", 200.00)
-        
-        # Checks to ensure that the next transaction type is properly updated
-        self.assertEqual(self.transaction1.getNextTNumber(), 106)
     
     # Anna
     @patch('builtins.print')
