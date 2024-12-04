@@ -48,18 +48,18 @@ class Client:
       self._phoneNumber = phoneNumber
 
       # A private class variable that holds the number of the next account value
-      self._nextAccountVal = 1000
+      self._nextAccountVal = 1001
       
       # Initializes the list of bank accounts as empty
       self._bankAccounts = []
       
       # Creates an empty (balance = 0) banking account instance of the account type passed in
       if accountType == 'checking':
-         newCheck = CheckingAccount(0.0)
+         newCheck = CheckingAccount(0.0, 'checking', 1000, self._clientNumber)
          
          self._bankAccounts.append(newCheck)
       else:
-         newSave = SavingsAccount(0.0)
+         newSave = SavingsAccount(0.0, 'savings', 1000, self._clientNumber)
          
          self._bankAccounts.append(newSave)
 
@@ -67,20 +67,23 @@ class Client:
    #
    #  @param account: The new account to be added to the Client (BankAccount)
    #
-   #  @require accountType is in the type list supplied  
+   #  @require accountType is in the type list supplied 
+   #   
+   #  @return account: the account that was created
    # Anna
    def openBankAccount(self, accountType, balanceIn = 0.0):
       assert accountType in ['checking', 'savings'], "The account type must be either checking or savings."
       
       # Creates either a new checking or savings account
       if (accountType == 'checking'):
-         account = CheckingAccount(balanceIn, 'checking', self._nextAccountVal)
+         account = CheckingAccount(balanceIn, 'checking', self._nextAccountVal, self._clientNumber)
       else:
-         account = SavingsAccount(balanceIn, 'savings', self._nextAccountVal)
+         account = SavingsAccount(balanceIn, 'savings', self._nextAccountVal, self._clientNumber)
       
       # Adds the new account to the client's list of accounts and update the next account number
       self._bankAccounts.append(account)
       self._nextAccountVal += 1
+      return account
 
     # Closes a client's already existing bank account
    #
