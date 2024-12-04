@@ -40,14 +40,14 @@ class Client:
       assert isinstance(phoneNumber, PhoneNumber), "The phone number must be of the PhoneNumber type."
       assert accountType in ['checking', 'savings'], "The account type must be either checking or savings."
       
-      self._clientNumber = Client.client_counter
+      self._clientNumber = Client.clientCounter
       Client.clientCounter += 1 # monotonically increase client number with each new instance of a client
 
       self._name = name 
       self._address = address
       self._phoneNumber = phoneNumber
 
-      # A private class variable that holds the number of the next account value
+      # A private class variable that holds the number of the next account value (accounts for value 1000 being used for the first account number)
       self._nextAccountVal = 1001
       
       # Initializes the list of bank accounts as empty
@@ -128,7 +128,14 @@ class Client:
    #
    #  @return: The next available client number (int)  
    def getNextClientNumber(self):
-      return Client.client_counter
+      return Client.clientCounter
+   
+   # An accessor/getter method for the next available account value
+   #
+   #  @return: The next available bank account value (integer)   
+   # Hunter
+   def getNextAccountNumber(self):
+      return self._nextAccountVal
    
    # Accessor/getter method for the first name of the client
    #
