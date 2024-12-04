@@ -285,7 +285,48 @@ class TestClient(unittest.TestCase):
         print("\nTesting to ensure that closeBankAccount() does not allow the closing of an account if the client only has one account") 
         
         # Attempts to close a bank account when there is only one account
-        self.assertRaises(AssertionError, self.client1.closeBankAccount, 1000)         
+        self.assertRaises(AssertionError, self.client1.closeBankAccount, 1000)
+    
+    def test_clientAccountTransactionNum(self):
+        print("\nTesting to ensure that proper client numbers, account numbers, and transaction numbers are being assigned")
+        
+        # Checks the client numbers of both clients to ensure they are valid and increasing by 1 each time
+        self.assertEqual(self.client1.getClientNumber(), 100)
+        self.assertEqual(self.client2.getClientNumber(), 101)
+        
+        # Creates additional accounts for each client
+        self.client1.openBankAccount('savings', 100.0)
+        self.client2.openBankAccount('savings', 100.0) 
+        
+        # Checks the account numbers of each of the two client accounts for both clients
+        self.assertEqual(self.client1._bankAccounts[0].getAccountNumber(), 1000)
+        self.assertEqual(self.client1._bankAccounts[1].getAccountNumber(), 1001)
+        self.assertEqual(self.client2._bankAccounts[0].getAccountNumber(), 1000)
+        self.assertEqual(self.client2._bankAccounts[1].getAccountNumber(), 1001)
+        
+        # Adds two valid transactions to each of the accounts
+        self.client1._bankAccounts[0].deposit(100.0)
+        self.client1._bankAccounts[0].withdraw(50.0)
+        self.client1._bankAccounts[1].deposit(100.0)
+        self.client1._bankAccounts[1].withdraw(50.0)   
+        self.client2._bankAccounts[0].deposit(100.0)
+        self.client2._bankAccounts[0].withdraw(50.0)
+        self.client2._bankAccounts[1].deposit(100.0)
+        self.client2._bankAccounts[1].withdraw(50.0)
+        
+        # Checks the transaction numbers of each of the two transactions within the client accounts for both clients
+        self.assertEqual(self.client1._bankAccounts[0]._accountTransactions[0].getTNumber(), 100)
+        self.assertEqual(self.client1._bankAccounts[0]._accountTransactions[1].getTNumber(), 101)
+        self.assertEqual(self.client1._bankAccounts[1]._accountTransactions[0].getTNumber(), 100)
+        self.assertEqual(self.client1._bankAccounts[1]._accountTransactions[1].getTNumber(), 101)
+        self.assertEqual(self.client2._bankAccounts[0]._accountTransactions[0].getTNumber(), 100)
+        self.assertEqual(self.client2._bankAccounts[0]._accountTransactions[1].getTNumber(), 101)
+        self.assertEqual(self.client2._bankAccounts[1]._accountTransactions[0].getTNumber(), 100)
+        self.assertEqual(self.client2._bankAccounts[1]._accountTransactions[1].getTNumber(), 101)
+        
+        # Prints out the client accounts to show visually that the numbers are valid/monotonically increasing
+        print(self.client1)
+        print(self.client2)
 
 if __name__ == '__main__':
     unittest.main()
