@@ -24,8 +24,8 @@ class SavingsAccount(BankAccount):
     #  @param balanceIn: The starting balance of the Savings Account (Floating point)
     #
     #  @ensure SavingsAccount object successfully created    
-    def __init__(self, balanceIn = 0.0, accountType = 'savings', accountNum = 1000, clientNum = 100):
-        super().__init__(balanceIn, accountType, accountNum, clientNum)
+    def __init__(self, accountNum, clientNum, balanceIn = 0.0, accountType = 'savings'):
+        super().__init__(accountNum, clientNum, balanceIn, accountType)
         self._overdrawnCount = 0  # Counter for overdrafts (savings only)
 
     # An accessor/getter method for the overdraft fee
@@ -63,7 +63,7 @@ class SavingsAccount(BankAccount):
         assert(isinstance(amount, float))
         assert(amount > 0)
         # Process the transaction and update necessary variables
-        depositTransaction = Transaction("deposit", amount)
+        depositTransaction = Transaction("deposit", self.getNextTransactionNum(), amount)
         # add deposit to list of transactions
         self._accountTransactions.append(depositTransaction)
         self._writeTransaction(depositTransaction)
@@ -92,9 +92,10 @@ class SavingsAccount(BankAccount):
         # Ensure the balance is at least $250 more than the withdrawal amount
         assert amount < self.getBalance() + 250.0 and self.getOverdrawnCount() < 3, "Transaction denied"
         # Process the transaction and update necessary variables
-        withdrawalTransaction = Transaction("withdrawal", amount)
+        withdrawalTransaction = Transaction("withdrawal", self.getNextTransactionNum(), amount)
         # add withdrawal to list of transactions
         self._accountTransactions.append(withdrawalTransaction)
+        self._writeTransaction(withdrawalTransaction)
         self._balance -= amount
         # If the withdrawal would put the balance in the negative, add an
         # overdraft fee and increment the overdrawn counter
@@ -102,9 +103,10 @@ class SavingsAccount(BankAccount):
             # Process the transaction and update necessary variables
             self._setOverdrawnCount(self.getOverdrawnCount() + 1)
             self._balance -= self.getOverdraft()
-            penaltyTransaction = Transaction("penalty", self.getOverdraft())
+            penaltyTransaction = Transaction("penalty", self.getNextTransactionNum(), self.getOverdraft())
             # add penalty to list of transactions
             self._accountTransactions.append(penaltyTransaction)
+            self._writeTransaction(penaltyTransaction)
             print("The account is overdrawn")
         return True
 
@@ -115,10 +117,10 @@ class SavingsAccount(BankAccount):
     #
     #  @return: True if the money was able to be transferred and False if not
     # Boden
-    def transfer(self, amount, otherAccount):
+    def transfer(self, amount, otherAccount: BankAccount):
         assert self.withdraw(amount)
         otherAccount.deposit(amount)
-        transaction = Transaction("transfer", amount)
+        transaction = Transaction("transfer", self.getNextTransactionNum(), amount)
         # add transfer to list of transactions
         self._accountTransactions.append(transaction)
         self._writeTransaction(transaction)
@@ -133,12 +135,12 @@ class SavingsAccount(BankAccount):
     # Hunter 
     def calcInterest(self):
         assert(self.getBalance() > 0)
-        interest_amount = self.getBalance() * BankAccount._intRates['savings']
-        transaction = Transaction("interest", interest_amount)
+        interestAmount = self.getBalance() * BankAccount._intRates['savings']
+        transaction = Transaction("interest", self.getNextTransactionNum(), interestAmount)
         # add interest to list of transactions
         self._accountTransactions.append(transaction)
         self._writeTransaction(transaction)
-        self.deposit(interest_amount)
+        self.deposit(interestAmount)
         return True
     
     # Prints a String representation of all transactions for a Savings Account object      
@@ -179,6 +181,8 @@ class SavingsAccount(BankAccount):
             outfile.write(encrypted_data)
             outfile.write(b"\n")
 
+        self._nextTransaction += 1
+
         if DEBUG:
             print(f"Transactions written to savings--{self._clientNum}-{self._accountNum}.txt.")
 
@@ -209,7 +213,7 @@ class SavingsAccount(BankAccount):
 
     # repr method to print the information of a clients checking account: 
     def __repr__(self):
-        return (f"Account Number: {super().getAccountNumber()}\n"
+        return (f"Account Number: {self._accountNum}\n"
                 f"Balance: {self._balance:.2f}\n"
                 f"Account Type: '{super().getAccountType()}'\n"
                 f"Overdrawn Count: '{self.getOverdrawnCount()}'\n"
