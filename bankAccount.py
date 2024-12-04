@@ -24,7 +24,7 @@ class BankAccount:
     #
     #  @ensure BankAccount object successfully created    
     # Hunter 
-    def __init__(self, balanceIn = 0.0, account_type = 'checking', accountNum = 1000):
+    def __init__(self, balanceIn = 0.0, account_type = 'checking', accountNum = 1000, clientNum = 100):
         # Assert statements for preconditions
         assert isinstance(balanceIn, float), "The balance must be a floating-point value."
         assert balanceIn >= 0.0, "The balance must be a positive value." 
@@ -37,6 +37,7 @@ class BankAccount:
         self._balance = balanceIn
         self._accountType = account_type
         self._accountNum = accountNum
+        self._clientNum = clientNum
         self._nextTransaction = 100 # A private class variable that hold the number of the next transaction
 
     @abstractmethod
