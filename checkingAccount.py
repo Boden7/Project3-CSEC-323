@@ -139,7 +139,7 @@ class CheckingAccount(BankAccount):
             outfile.write(b"\n")
 
         if DEBUG:
-            print("Transactions written to checking.txt.")
+            print(f"Transactions written to checking-{self._clientNum}-{self._accountNum}.txt.")
 
     # Method to read all transactions made on a checking account to the checking.txt
     # file
