@@ -14,6 +14,7 @@ from client import Client
 from name import Name
 from address import Address
 from phoneNumber import PhoneNumber
+from password import Password
 from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
 from bankAccount import BankAccount
@@ -29,30 +30,31 @@ class TestClient(unittest.TestCase):
         self.validName = Name("First", "Last")
         self.validAddress = Address("100 Street", "City", "VA")
         self.validPhone = PhoneNumber("8041234567")
+        self.validPassword = Password("Tester123!")
         
         # Initializes two valid clients
-        self.client1 = Client(self.validName, self.validAddress, self.validPhone, "checking")
-        self.client2 = Client(self.validName, self.validAddress, self.validPhone, "savings")
+        self.client1 = Client(self.validName, self.validAddress, self.validPhone, "checking", self.validPassword)
+        self.client2 = Client(self.validName, self.validAddress, self.validPhone, "savings", self.validPassword)
         
     def test_ConstructorInvalidName(self):
         print("\nTesting to ensure the constructor properly throws an assertion with incorrect name type")
         
-        self.assertRaises(AssertionError, Client, "First Last", self.validAddress, self.validPhone, 'checking')
+        self.assertRaises(AssertionError, Client, "First Last", self.validAddress, self.validPhone, 'checking', self.validPassword)
     
     def test_ConstructorInvalidAddress(self):
         print("\nTesting to ensure the constructor properly throws an assertion with incorrect address type")
         
-        self.assertRaises(AssertionError, Client, self.validName, "100 Street, City, VA", self.validPhone, 'checking')
+        self.assertRaises(AssertionError, Client, self.validName, "100 Street, City, VA", self.validPhone, 'checking', self.validPassword)
     
     def test_ConstructorInvalidPhoneNumber(self):
         print("\nTesting to ensure the constructor properly throws an assertion with incorrect phone number type")
         
-        self.assertRaises(AssertionError, Client, self.validName, self.validAddress, "8041234567", 'checking')
+        self.assertRaises(AssertionError, Client, self.validName, self.validAddress, "8041234567", 'checking', self.validPassword)
     
     def test_ConstructorInvalidAccountType(self):
         print("\nTesting to ensure the constructor properly throws an assertion with incorrect account type")
         
-        self.assertRaises(AssertionError, Client, self.validName, self.validAddress, self.validPhone, 'neither')    
+        self.assertRaises(AssertionError, Client, self.validName, self.validAddress, self.validPhone, 'neither', self.validPassword)    
     
     def test_ConstructorSetFirstName(self):
         print("\nTesting to ensure the constructor can properly set the first name") 
