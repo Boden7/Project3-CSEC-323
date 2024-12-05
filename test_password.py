@@ -10,7 +10,7 @@ Test each method with at least one unit test
 # Import statements
 import unittest
 from unittest.mock import patch
-from Password import Password
+from password import Password
 
 class TestPassword(unittest.TestCase):
     # The setup method initializes a password to be used for testing purposes
