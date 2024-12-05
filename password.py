@@ -13,7 +13,7 @@ class Password:
     # Defines the Class Constants
     PASS_MIN_LEN = 8
     PASS_MAX_LEN = 16
-    bad_Chars = {"/", "\\", "<", ">", "|", ""}
+    bad_Chars = {"/", "\\", "<", ">", "|", " "}
 
     # Constructs a Password object.
     #
