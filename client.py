@@ -11,14 +11,18 @@ from name import Name
 from address import Address
 from phoneNumber import PhoneNumber
 from bankAccount import BankAccount
+from password import Password
 from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
 from AES_CBC import encrypt_AES_CBC
+import os
+import hashlib
 
 # Hunter
 class Client:
 
-
+   # Declares the class variables
+   PEPPER = "SHELBY_MADE"
    clientCounter = 100 # client number set to monotonically increase
    
    # Constructs a Client object.
@@ -34,13 +38,14 @@ class Client:
    #  @require accountType is in the type list supplied
    #
    #  @ensure Client object successfully created   
-   def __init__(self, name: Name, address: Address, phoneNumber: PhoneNumber, accountType: str):
+   def __init__(self, name: Name, address: Address, phoneNumber: PhoneNumber, accountType: str, password: Password):
       
       # Assert statements
       assert isinstance(name, Name), "The name must be of the Name type."
       assert isinstance(address, Address), "The address must be of the Address type."
       assert isinstance(phoneNumber, PhoneNumber), "The phone number must be of the PhoneNumber type."
       assert accountType in ['checking', 'savings'], "The account type must be either checking or savings."
+      assert isinstance(password, Password), "The password must be of the Password type."
       
       self._clientNumber = Client.clientCounter
       Client.clientCounter += 1 # monotonically increase client number with each new instance of a client
@@ -55,6 +60,16 @@ class Client:
       # Initializes the list of bank accounts as empty
       self._bankAccounts = []
       
+      # Initializes the client's random salt value
+      self._salt = os.urandom(16)      
+      
+      # Initializes the client's hashed password (stored in the variable, but
+      # not saved as an instance variable)
+      hashVal = _createSecureHash(password)
+      
+      # Writes the hashed password value to its own file
+      # TO BE DONE
+      
       # Creates an empty (balance = 0) banking account instance of the account type passed in
       if accountType == 'checking':
          self.newCheck = CheckingAccount(1000, self._clientNumber, 0.0, 'checking')
@@ -64,6 +79,37 @@ class Client:
          self.newSave = SavingsAccount(1000, self._clientNumber, 0.0, 'savings')
          
          self._bankAccounts.append(self.newSave)
+   
+   # A private method to securely hash the password.
+   #
+   #  @parameter: The password to hash
+   #
+   #  @require: 8 <= len(password) <=  16
+   #  @require: password does not contain "/", "\\", "<", ">", "|"
+   def _createSecureHash(self, password):
+      # Assert statements
+      assert isinstance(password, str), "Invalid type"
+      assert Client.PASS_MIN_LEN <= len(password) <=  Client.PASS_MAX_LEN, "Invalid length" 
+      assert _checkSyntax(password)  
+      
+      # Hashes the password based on the salt value, pepper value, hash algorithm,
+      # and number of iterations to go through
+      self._iterations = 100_000
+      self._hash_algo = 'sha256'
+      hash_value = hashlib.pbkdf2_hmac(
+           self._hash_algo,
+           password.encode('utf-8') + Client.PEPPER.encode('utf-8'),  
+           self._salt,
+           self._iterations
+       ) 
+      
+      # Returns the hash value
+      return hash_value
+   
+   # A method to allow the user to change their password. The user must first
+   # enter their old password, then enter a valid new password twice.
+   def changePassword(self):
+      pass
     
    # Method to write and store client passwords for their accounts to a file
    # Data is encrypted first
@@ -264,4 +310,3 @@ class Client:
       
       # Compare immutable variables
       return (self._clientNumber == other._clientNumber)
-   
