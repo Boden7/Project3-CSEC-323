@@ -65,7 +65,7 @@ class Client:
       
       # Initializes the client's hashed password (stored in the variable, but
       # not saved as an instance variable)
-      hashVal = _createSecureHash(password)
+      hashVal = self._createSecureHash(password)
       
       # Writes the hashed password value to its own file
       # TO BE DONE
@@ -88,9 +88,7 @@ class Client:
    #  @require: password does not contain "/", "\\", "<", ">", "|"
    def _createSecureHash(self, password):
       # Assert statements
-      assert isinstance(password, str), "Invalid type"
-      assert Client.PASS_MIN_LEN <= len(password) <=  Client.PASS_MAX_LEN, "Invalid length" 
-      assert _checkSyntax(password)  
+      assert isinstance(password, Password), "The password must be of the Password type."
       
       # Hashes the password based on the salt value, pepper value, hash algorithm,
       # and number of iterations to go through
@@ -98,7 +96,7 @@ class Client:
       self._hash_algo = 'sha256'
       hash_value = hashlib.pbkdf2_hmac(
            self._hash_algo,
-           password.encode('utf-8') + Client.PEPPER.encode('utf-8'),  
+           password._password.encode('utf-8') + Client.PEPPER.encode('utf-8'),  
            self._salt,
            self._iterations
        ) 
