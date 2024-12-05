@@ -1,67 +1,57 @@
+""" 
+This module defines the Password class.
+@author: Hunter Peacock and Anna Pitt
+@date: December 5th, 2024
 
-# Password class to create and check client passowords
-# Hunter
+A class to represent the data elements and methods required to implement a Password
+"""
 
 import os 
 import hashlib
 
 class Password:
-
-    # Define the Class Constants
-    PEPPER = "SHELBY_MADE"
+    # Defines the Class Constants
     PASS_MIN_LEN = 8
     PASS_MAX_LEN = 16
     bad_Chars = {"/", "\\", "<", ">", "|", ""}
 
-    # Client constructor
-    # @parameter: password - the string passed in containing the password
-    # @require: 8 <= len(password) <= 16
-    # @require: password does not contain "/", "\\", "<", ">", "|"
+    # Constructs a Password object.
+    #
+    #  @param password: The password associated with the Password object (String)
+    #
+    #  @require: password is a String type with a length between 8 and 16 (both inclusive)
+    #  that does not include any special characters as defined within bad_Chars
+    #
+    #  @ensure Password object successfully created
     def __init__(self, password):
-        assert isinstance(password, str), "Invalid type"
-        assert Password.PASS_MIN_LEN <= len(password) <= Password.PASS_MAX_LEN, "Invalid length"
+        # Assert statements
+        assert isinstance(password, str), "The password must be a string."
+        assert Password.PASS_MIN_LEN <= len(password) <= Password.PASS_MAX_LEN, "The password must be between 8 and 16 characters."
         assert _checkSyntax(password)
-        self._createSecureHash(password)
+        
+        # Creates an instance variable to store the valid password
+        self._password = password
 
-
-    # Method to securly hash the password
-    # @parameter: the password to hash
-    # @require: 8 <= len(password) <= 16
-    # @require: password does not contain "/", "\\", "<", ">", "|"
-    def _createSecureHash(self, password):
-        assert isinstance(password, str), "Invalid type"
-        assert Password.PASS_MIN_LEN <= len(password) <= Password.PASS_MAX_LEN, "Invalid length"
-        assert _checkSyntax(password)
-        self._salt = os.urandom(16)
-        self._iterations = 100_000
-        self._hash_algo = 'sha256'
-        hash_value = hashlib.pbkdf2_hmac(self._hash_algo, \
-            password.encode('utf-8') + Password.PEPPER.encode('utf-8'), self._salt, self._iterations)
-        self._hash = hash_value
-
-
-    # Private method to check a password against the stored hash
-    # @parameter: password - the string passed in containing the password to check
-    # @require: 8 <= len(password) <= 16
-    # @require: password does not contain "/", "\\", "<", ">", "|"
-    def _checkPassword(self, password):
-        #Assertions to check password type, length, and syntax
-        assert isinstance(password, str), "Invalid type"
-        assert Password.PASS_MIN_LEN <= len(password) <= Password.PASS_MAX_LEN, "Invalid length"
-        assert _checkSyntax(password)
-        # Compute the hash from password entered
-        passswordHash = hashlib.pbkdf2_hmac(self._hash_algo,\
-            password.encode('utf-8') + Password.PEPPER.encode('utf-8'), self._salt, self._iterations)
-        # Compare the computed hash and the stored hash and return the result
-        return (passswordHash == self._hash)
-    
-# private helper function to check the password for prohibitied characters
-# @parameter: password - the string passed in containing the password
-# @require: 8 <= len(password) <= 16
+# A private helper function to check the password for prohibited characters.
+#
+#  @param password: The password to check for invalid characters (String)
+#
+#  @require: password is a String type with a length between 8 and 16 (both inclusive)
+#
+#  @ensure Password object successfully created  
 def _checkSyntax(password):
-    assert isinstance(password, str), "Invalid type"
-    assert Password.PASS_MIN_LEN <= len(password) <= Password.PASS_MAX_LEN, "Invalid length"
+    # Assert statements
+    assert isinstance(password, str), "The password must be a string."
+    assert Password.PASS_MIN_LEN <= len(password) <= Password.PASS_MAX_LEN, "The password must be between 8 and 16 characters."
+    
+    # Sets a boolean
     result = True
+    
+    # Loops through every single character within the password
     for element in password:
+        # Determines the result based on the previous result and if there
+        # is an invalid character within the password or not
         result = result and element not in Password.bad_Chars
+        
+    # Returns the result
     return result
