@@ -16,9 +16,13 @@ class BankAccount:
 
     # Constructs a BankAccount object.
     #
+    #  @param accountNum: The account number of the Bank Account (int; received from Client)
+    #  @param clientNum: The Client number of the Bank Account (int; received from Client)
     #  @param balanceIn: The starting balance of the Bank Account (Floating point; default is $0)
     #  @param account_type: The account type of the Bank Account (String; default is 'checking')
     #
+    #  @require: accountNum is an int type that is >= 1000
+    #  @require: clientNum is an int type that is >= 100
     #  @require: balanceIn is a floating-point type and is positive
     #  @require: account_type must be either 'checking' or 'savings'    
     #
@@ -26,7 +30,11 @@ class BankAccount:
     # Hunter 
     def __init__(self, accountNum, clientNum, balanceIn = 0.0, account_type = 'checking'):
         # Assert statements for preconditions
+        assert isinstance(accountNum, int), "The account number must be an integer value."
+        assert isinstance(clientNum, int), "The client number must be an integer value."
         assert isinstance(balanceIn, float), "The balance must be a floating-point value."
+        assert accountNum >= 1000, "The account number must be >= 1000."
+        assert clientNum >= 100, "The client number must be >= 100."
         assert balanceIn >= 0.0, "The balance must be a positive value." 
         assert account_type in ['checking', 'savings'], "Invalid account type."
 
