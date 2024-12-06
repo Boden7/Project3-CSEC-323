@@ -3,6 +3,7 @@
 ** Bank Account and Client Management System Overview **
 
 * This project allows you to manage clients and their bank accounts. 
+* Each client will create a password for their account, which can later be changed if desired. 
 * A client can have one or more bank accounts, with the possibility to create, 
     display, transfer, deposit, and withdraw funds from checking or savings accounts. 
 * The system also includes functionality for handling overdrafts, interest calculations, and account transaction histories. 
@@ -10,7 +11,7 @@
     phone number, and address, are validated to ensure accuracy and conformity.
 
 ---------------------------- FEATURES --------------------------
-* Client Class: Manage client information, including name, phone number, address, and associated bank accounts.
+* Client Class: Manage client information, including name, phone number, address, password, and associated bank accounts.
 * Bank Account Class: Base class for managing both checking and savings accounts.
 * Checking Account: Inherits from BankAccount and supports specific checking account operations (e.g., interest calculation, withdrawals, transfers).
 * Savings Account: Inherits from BankAccount and includes overdraft handling and interest calculation.
