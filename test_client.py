@@ -330,5 +330,11 @@ class TestClient(unittest.TestCase):
         print(self.client1)
         print(self.client2)
 
+    def test_get_next_account_number(self):
+        print("Testing getting the next account number")
+        self.assertEqual(self.client1.getNextAccountNumber(), 1001)
+        self.client1.openBankAccount('checking', 0.0)
+        self.assertEqual(self.client1.getNextAccountNumber(), 1002)
+
 if __name__ == '__main__':
     unittest.main()
