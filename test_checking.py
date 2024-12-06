@@ -1,6 +1,6 @@
 """ 
 This module defines the tester for the Checking Account class.
-@author: Brenden Shelton
+@author: Brenden Shelton & Hunter Peacock
 @date: November 3, 2024
 
 Import the unittest module and the CheckingAccount module
