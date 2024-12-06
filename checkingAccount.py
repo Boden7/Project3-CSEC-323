@@ -175,6 +175,7 @@ class CheckingAccount(BankAccount):
                 print("Decrypted transaction:", data)
                 infile.readline()  # Skip the newline
                 length = infile.readline().rstrip().decode()
+                return data
 
 
     # Returns a String representation of a Checking Account object
