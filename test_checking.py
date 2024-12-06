@@ -93,5 +93,14 @@ class TestCheckingAccount(unittest.TestCase):
         self.account.deposit(1.0)
         self.assertEqual(self.account.getNextTransactionNum(), 101)
 
+     # Test the representation method (__repr__)
+    def test_repr(self):
+        print("Testing the repr methodA")
+        self.account.deposit(100.0)
+        reprCheck = repr(self.account)
+        self.assertIn("Account Number:", reprCheck)
+        self.assertIn("Balance: 100.00", reprCheck)
+        self.assertIn("Account Type: 'checking'", reprCheck)
+
 if __name__ == "__main__":
     unittest.main()
