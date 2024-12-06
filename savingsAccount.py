@@ -150,7 +150,7 @@ class SavingsAccount(BankAccount):
     # Hunter 
     def printTransactionList(self):
         print("Savings Account Transactions:")
-        print(super().printTransactionList())
+        return super().printTransactionList()
 
     # Method to write all transactions made on a savings account to the savings.txt
     # file
