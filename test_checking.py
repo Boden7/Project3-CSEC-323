@@ -84,7 +84,8 @@ class TestChecking(unittest.TestCase):
         self.account.deposit(50.0)
         self.account.withdraw(20.0)
         transactions = self.account.printTransactionList()
-        self.assertNotEqual(transactions, "There are no valid transactions to display.")
+        print(transactions)
+        self.assertEqual(transactions, "Transaction # 100, amount = $50.00, date 2024-12-06, type: deposit\nTransaction # 101, amount = $20.00, date 2024-12-06, type: withdrawal")
     
     def test_transaction_listing_empty(self):
         # Test printing the transaction list: 
@@ -92,9 +93,9 @@ class TestChecking(unittest.TestCase):
         transactions = self.account.printTransactionList()
         self.assertEqual(transactions, "There are no valid transactions to display.")
     
-    def test_write_transaction(self):
+    def test_write_and_read_transaction(self):
         # Test writing a transaction to the file with encryption: 
-        print("Testing transaction write with encryption...")
+        print("Testing transaction write with encryption and reading it back...")
         transaction = Transaction('deposit', 100, 1.0)# Dummy transaction
         # Convert the dummy transaction into a string and pass it in to the write function
         transactionStr = transaction.__repr__()  
@@ -105,8 +106,10 @@ class TestChecking(unittest.TestCase):
         self.assertEqual(returnStr, transactionStr)
 
     def test_get_next_transaction_number(self):
+        # Test getting the transaction number of the first account
         print("Testing getting the next transaction number")
         self.assertEqual(self.account.getNextTransactionNum(), 100)
+        # Create a transaction and make sure the next transaction number correctly updates
         self.account.deposit(1.0)
         self.assertEqual(self.account.getNextTransactionNum(), 101)
 
