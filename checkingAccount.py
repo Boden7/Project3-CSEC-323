@@ -11,6 +11,7 @@ This class is inherited from the BankAccount superclass
 from bankAccount import BankAccount
 from transaction import Transaction
 from AES_CBC import encrypt_AES_CBC, decrypt_AES_CBC
+import os
 
 # Hunter 
 class CheckingAccount(BankAccount):
@@ -27,9 +28,9 @@ class CheckingAccount(BankAccount):
         super().__init__(accountNum, clientNum, balanceIn, accountType)
 
         # Encryption key (Ensure the key is 16, 24, or 32 bytes for AES-128, AES-192, or AES-256)
-        self._key = b'MySuperSecretKey1222222222222222'
+        self._key = os.urandom(32)
         # Initialization vector (Ensure the IV is 16 bytes)
-        self._iv = b'MySuperSecretIV1'
+        self._iv = os.urandom(16)
 
     # Deposits money into the account if the transaction is valid and records the transaction
     #
