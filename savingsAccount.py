@@ -21,7 +21,10 @@ class SavingsAccount(BankAccount):
 
     # Constructs a SavingsAccount object.
     #
-    #  @param balanceIn: The starting balance of the Savings Account (Floating point)
+    #  @param accountNum: The account number of the Savings Account (int)
+    #  @param clientNum: The Client number of the Savings Account (int)
+    #  @param balanceIn: The starting balance of the Savings Account (Floating point; default is 0.0)
+    #  @param account_type: The account type of the Savings Account (String; default is 'savings')
     #
     #  @ensure SavingsAccount object successfully created    
     def __init__(self, accountNum, clientNum, balanceIn = 0.0, accountType = 'savings'):
