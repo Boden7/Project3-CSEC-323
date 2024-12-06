@@ -9,7 +9,6 @@ Test each method with at least one unit test
 
 # Import statements
 import unittest
-from unittest.mock import patch
 from password import Password
 
 class TestPassword(unittest.TestCase):
