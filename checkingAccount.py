@@ -26,6 +26,11 @@ class CheckingAccount(BankAccount):
     def __init__(self, accountNum, clientNum, balanceIn = 0.0, accountType = 'checking'):
         super().__init__(accountNum, clientNum, balanceIn, accountType)
 
+        # Encryption key (Ensure the key is 16, 24, or 32 bytes for AES-128, AES-192, or AES-256)
+        self._key = b'MySuperSecretKey1222222222222222'
+        # Initialization vector (Ensure the IV is 16 bytes)
+        self._iv = b'MySuperSecretIV1'
+
     # Deposits money into the account if the transaction is valid and records the transaction
     #
     #  @param amount: the amount to be deposited
@@ -116,10 +121,9 @@ class CheckingAccount(BankAccount):
     def _writeTransaction(self, transaction: Transaction):
         # Set the Debug Flag
         DEBUG = False
-        # Encryption key (Ensure the key is 16, 24, or 32 bytes for AES-128, AES-192, or AES-256)
-        key = b'MySuperSecretKey1222222222222222'
-        # Initialization vector (Ensure the IV is 16 bytes)
-        iv = b'MySuperSecretIV1'
+        
+        key = self._key
+        iv = self._iv
 
         if DEBUG:
             print("The length of the key is %d bytes" % len(key))
@@ -151,8 +155,9 @@ class CheckingAccount(BankAccount):
     def _readTransactions(self):
         # Set the Debug Flag
         DEBUG = False
-        key = b'MySuperSecretKey1222222222222222'
-        iv = b'MySuperSecretIV1'
+        
+        key = self._key
+        iv = self._iv
 
         # Open the file to read the data
         fileName = f"checking-{self._clientNum}-{self._accountNum}.txt"
