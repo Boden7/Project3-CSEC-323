@@ -220,6 +220,8 @@ class SavingsAccount(BankAccount):
                 infile.readline()  # Skip the newline
                 length = infile.readline().rstrip().decode()
 
+            return data
+
     # repr method to print the information of a clients checking account: 
     def __repr__(self):
         return (f"Account Number: {self._accountNum}\n"
