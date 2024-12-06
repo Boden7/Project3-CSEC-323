@@ -9,6 +9,7 @@ Test each method with at least one unit test
 
 import unittest
 from checkingAccount import CheckingAccount
+from transaction import Transaction
 
 class TestCheckingAccount(unittest.TestCase):
     
@@ -26,7 +27,7 @@ class TestCheckingAccount(unittest.TestCase):
         print("Testing account initialization...")
         self.assertEqual(self.account.getBalance(), 100.0)
 
-        def test_ConstructorInvalidAccountNumType(self):
+    def test_ConstructorInvalidAccountNumType(self):
         print("\nTesting to ensure the constructor properly throws an assertion with incorrect account number type")
         self.assertRaises(AssertionError, CheckingAccount, "1000", 100, 100.0)
     
@@ -115,7 +116,7 @@ class TestCheckingAccount(unittest.TestCase):
         self.account.deposit(100.0)
         reprCheck = repr(self.account)
         self.assertIn("Account Number:", reprCheck)
-        self.assertIn("Balance: 100.00", reprCheck)
+        self.assertIn("Balance: 200.00", reprCheck)
         self.assertIn("Account Type: 'checking'", reprCheck)
 
 if __name__ == "__main__":
