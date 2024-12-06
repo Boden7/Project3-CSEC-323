@@ -147,6 +147,8 @@ class SavingsAccount(BankAccount):
         return True
     
     # Prints a String representation of all transactions for a Savings Account object      
+    # 
+    #  @return the list of transactions in string format
     # Hunter 
     def printTransactionList(self):
         print("Savings Account Transactions:")
