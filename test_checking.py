@@ -1,5 +1,12 @@
-# @authors Brenden Shelton
-# Date: 11/3/24
+""" 
+This module defines the tester for the Checking Account class.
+@author: Brenden Shelton
+@date: November 3, 2024
+
+Import the unittest module and the CheckingAccount module
+Test each method with at least one unit test
+"""
+
 import unittest
 from checkingAccount import CheckingAccount
 
