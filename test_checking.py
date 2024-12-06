@@ -25,6 +25,22 @@ class TestCheckingAccount(unittest.TestCase):
         # Test account initialization with initial balance:
         print("Testing account initialization...")
         self.assertEqual(self.account.getBalance(), 100.0)
+
+        def test_ConstructorInvalidAccountNumType(self):
+        print("\nTesting to ensure the constructor properly throws an assertion with incorrect account number type")
+        self.assertRaises(AssertionError, CheckingAccount, "1000", 100, 100.0)
+    
+    def test_ConstructorInvalidAccountNumTooLow(self):
+        print("\nTesting to ensure the constructor properly throws an assertion with incorrect account number value (less than 1000)")
+        self.assertRaises(AssertionError, CheckingAccount, 999, 100, 100.0)
+    
+    def test_ConstructorInvalidClientNumType(self):
+        print("\nTesting to ensure the constructor properly throws an assertion with incorrect client number type")
+        self.assertRaises(AssertionError, CheckingAccount, 1000, "100", 100.0)
+    
+    def test_ConstructorInvalidAccountNumType(self):
+        print("\nTesting to ensure the constructor properly throws an assertion with incorrect client number value (less than 100)") 
+        self.assertRaises(AssertionError, CheckingAccount, 1000, 99, 100.0)
     
     def test_deposit(self):
         # Test depositing funds into the account:
