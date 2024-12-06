@@ -103,7 +103,7 @@ class CheckingAccount(BankAccount):
     # Hunter
     def printTransactionList(self):
         print("Checking Account Transactions:")
-        print(super().printTransactionList())
+        return super().printTransactionList()
 
     # Method to write all transactions made on a checking account to the checking.txt
     # file
