@@ -17,6 +17,7 @@ from savingsAccount import SavingsAccount
 from AES_CBC import encrypt_AES_CBC
 import os
 import hashlib
+import getpass
 
 # Hunter
 class Client:
@@ -60,16 +61,24 @@ class Client:
       
       # Initializes the list of bank accounts as empty
       self._bankAccounts = []
-      
-      # Initializes the client's random salt value
-      self._salt = os.urandom(16)      
-      
+            
       # Initializes the client's hashed password (stored in the variable, but
       # not saved as an instance variable)
       hashVal = self._createSecureHash(password)
       
+      # Creates the file name based on the client's client number
+      fileName = str(self._clientNumber) + "_password"      
+      
       # Writes the hashed password value to its own file
-      # TO BE DONE
+      # Open the file to write the data
+      with open(fileName, "wb") as outfile:
+         # Write the length of the encrypted password to the file
+         outfile.write(str(len(hashVal)).encode())
+         outfile.write(b"\n")
+         
+         # Write the encrypted password to the file
+         outfile.write(hashVal)
+         outfile.write(b"\n")
       
       # Creates an empty (balance = 0) banking account instance of the account type passed in
       if accountType == 'checking':
@@ -83,16 +92,16 @@ class Client:
    
    # A private method to securely hash the password.
    #
-   #  @param password: The password to hash
+   #  @parameter: The password to hash
    #
-   #  @require password must be between 8 and 16 characters inclusive
-   #  @require password does not contain  special characters of "/", "\\", "<", ">", "|", " "
+   #  @require: password is of the Password type (ensures all requirements are met)
    def _createSecureHash(self, password):
       # Assert statements
       assert isinstance(password, Password), "The password must be of the Password type."
       
       # Hashes the password based on the salt value, pepper value, hash algorithm,
       # and number of iterations to go through
+      self._salt = os.urandom(16)      
       self._iterations = 100_000
       self._hash_algo = 'sha256'
       hash_value = hashlib.pbkdf2_hmac(
@@ -105,10 +114,43 @@ class Client:
       # Returns the hash value
       return hash_value
    
+   # A private method to check a password against the stored hash.
+   #
+   # @param password: The string passed in containing the password to check
+   # We did not use the Password class here due to it containing assertion errors
+   def _checkPassword(self, password):
+      #Assertions to check password type, length, and syntax
+      if not isinstance(password, str):
+         return False
+      if len(password) < Client.PASS_MIN_LEN or len(password) > Client.PASS_MAX_LEN:
+         return False
+      if not _checkSyntax(password):
+         return False
+
+      # Compute the hash from password entered   
+      passswordHash = hashlib.pbkdf2_hmac(
+          self._hash_algo, 
+          password.encode('utf-8') + Client.PEPPER.encode('utf-8'),  
+          self._salt,
+          self._iterations
+      )
+        
+      # Compare the computed hash and the stored hash and return the result
+      return (passswordHash == self._hash)   
+   
    # A method to allow the user to change their password. The user must first
    # enter their old password, then enter a valid new password twice.
    def changePassword(self):
-      pass
+      # Initializes a boolean to keep track of whether the
+      matchingPass = False
+      
+      # Loops while the client's password and entered password are different
+      while not matchingPass:
+         # Prompts the user to enter their old password
+         userPass = getpass("Enter your current password: ")
+         
+         # Determines if the
+         hashVal = self._checkPass(userPass)     
     
    # Method to write and store client passwords for their accounts to a file
    # Data is encrypted first
