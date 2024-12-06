@@ -11,7 +11,7 @@ import unittest
 from checkingAccount import CheckingAccount
 from transaction import Transaction
 
-class TestCheckingAccount(unittest.TestCase):
+class TestChecking(unittest.TestCase):
     
     def setUp(self):
         # Set up a CheckingAccount instance for each test
