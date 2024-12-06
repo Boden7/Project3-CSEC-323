@@ -9,7 +9,6 @@ Test each method with at least one unit test
 
 # Import statements
 import unittest
-from unittest.mock import patch
 from client import Client
 from name import Name
 from address import Address
@@ -17,8 +16,6 @@ from phoneNumber import PhoneNumber
 from password import Password
 from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
-from bankAccount import BankAccount
-import os
 import hashlib
 
 class TestClient(unittest.TestCase):
