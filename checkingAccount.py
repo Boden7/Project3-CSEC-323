@@ -100,6 +100,8 @@ class CheckingAccount(BankAccount):
         return True
     
     # Prints a String representation of all transactions for a Checking Account object   
+    # 
+    #  @return the list of transactions in string format
     # Hunter
     def printTransactionList(self):
         print("Checking Account Transactions:")
