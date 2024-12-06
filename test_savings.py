@@ -17,7 +17,7 @@ class TestSavings(unittest.TestCase):
         print("\nResetting client and account numbers for testing...")
         self.accountNum = 1000
         self.clientNum = 100    
-        self.account = SavingsAccount(self.accountNum, self.clientNum, 0.0)  # Initial balance of 100.0
+        self.account = SavingsAccount(self.accountNum, self.clientNum, 0.0)  # Initial balance of 0.0
         self.accountNum += 1
         self.account2 = SavingsAccount(self.accountNum, self.clientNum, 500.0)  # Another account for transfer tests
 
@@ -33,6 +33,7 @@ class TestSavings(unittest.TestCase):
 
     # Test deposit method (positive amount)
     def test_deposit(self):        
+        print("Testing a valid deposit")
         # Deposit a valid positive amount
         success = self.account.deposit(50.0)
         self.assertTrue(success)
@@ -40,11 +41,13 @@ class TestSavings(unittest.TestCase):
 
     # Test deposit method (negative amount, should raise the assertion error)
     def test_deposit_invalid(self):
+        print("Testing an invalid deposit")
         with self.assertRaises(AssertionError):
             self.account.deposit(-50.0)
 
     # Test withdraw method (valid withdrawal)
-    def test_withdraw(self):        
+    def test_withdraw(self):    
+        print("Testing a valid withdrawal")    
         # Withdraw a valid amount
         self.account._balance = 1000.0
         success = self.account.withdraw(200.0)
@@ -53,6 +56,7 @@ class TestSavings(unittest.TestCase):
 
     # Test withdraw method (insufficient balance, should apply overdraft fee)
     def test_withdraw_overdraft(self):      
+        print("Testing a valid withdrawal with overdraft")
         # Withdraw an amount greater than balance
         success = self.account.withdraw(50.0)
         self.assertTrue(success)
@@ -63,6 +67,7 @@ class TestSavings(unittest.TestCase):
 
     # Test withdraw method (too many overdrafts, should deny the withdrawal)
     def test_withdraw_too_many_overdrafts(self):
+        print("Testing an invalid withdrawal because of excess overdrafts")
         self.account._setOverdrawnCount(3)  # Simulate too many overdrafts
 
         with self.assertRaises(AssertionError):
@@ -70,6 +75,7 @@ class TestSavings(unittest.TestCase):
 
     # Test transfer between accounts
     def test_transfer(self):
+        print("Testing a valid transfer")
         self.account._balance = 1000.0
         success = self.account.transfer(200.0, self.account2)
         self.assertTrue(success)
@@ -78,6 +84,7 @@ class TestSavings(unittest.TestCase):
 
     # Test interest calculation and deposit into the account
     def test_calc_interest(self):
+        print("Testing a valid interest transaction")
         self.account._balance = 1000.0
         # Assume the interest rate for savings accounts is 0.04 (4%)
         self.account.calcInterest()
@@ -85,12 +92,14 @@ class TestSavings(unittest.TestCase):
 
     # Test getting the overdraft fee
     def test_get_overdraft(self):
+        print("Testing the get overdraft")
         self.account._setOverdrawnCount(1)
         
         overdraft_fee = self.account.getOverdraft()
         self.assertEqual(overdraft_fee, 20.00)  # Based on the _overdraftFee list
 
     def test_calculate_interest(self):
+        print("Testing an interest calculation")
         # Test interest calculation and application to balance:
         self.account._balance = 100.0
         print("Testing interest calculation...")
@@ -108,12 +117,13 @@ class TestSavings(unittest.TestCase):
 
     def test_transaction_listing_empty(self):
         # Test printing the transaction list:
-        print("Testing transaction listing...")
+        print("Testing transaction listing with an empty transaction list...")
         transactions = self.account.printTransactionList()
         self.assertEqual(transactions, "There are no valid transactions to display.")
     
     def test_write_transaction(self):
         # Deposit a valid positive amount
+        print("Testing valid transaction writing")
         success = self.account.deposit(50.0)
         self.assertTrue(success)
         self.assertEqual(self.account.getBalance(), 50.0)
@@ -126,6 +136,7 @@ class TestSavings(unittest.TestCase):
     
     def test_read_transaction(self):
         # Deposit a valid positive amount
+        print("Testing reading transactions")
         success = self.account.deposit(50.0)
         self.assertTrue(success)
         self.assertEqual(self.account.getBalance(), 50.0)
@@ -137,8 +148,8 @@ class TestSavings(unittest.TestCase):
 
     # Test transaction logging in the list with transaction
     def test_transaction_logging(self):
+        print("Testing that the transaction list updates properly")
         self.account.deposit(200.0)
-        
         transaction_list = self.account._accountTransactions
         self.assertEqual(len(transaction_list), 1)
         self.assertEqual(transaction_list[0].getTType(), "deposit")
@@ -146,8 +157,8 @@ class TestSavings(unittest.TestCase):
 
     # Test the representation method (__repr__)
     def test_repr(self):
+        print("Testing the repr methodA")
         self.account.deposit(100.0)
-        
         reprCheck = repr(self.account)
         self.assertIn("Account Number:", reprCheck)
         self.assertIn("Balance: 100.00", reprCheck)
