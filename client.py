@@ -31,6 +31,7 @@ class Client:
    #  @param address: The address of the Client (Address)
    #  @param phoneNumber: The phone number of the Client (PhoneNumber)
    #  @param accountType: The account type of the first account to be opened for the Client (String)
+   #  @param password: The password of the Client (Password)
    #
    #  @require name is an instance of the Name class
    #  @require address is an instance of the Address class
@@ -82,10 +83,10 @@ class Client:
    
    # A private method to securely hash the password.
    #
-   #  @parameter: The password to hash
+   #  @param password: The password to hash
    #
-   #  @require: 8 <= len(password) <=  16
-   #  @require: password does not contain "/", "\\", "<", ">", "|"
+   #  @require password must be between 8 and 16 characters inclusive
+   #  @require password does not contain  special characters of "/", "\\", "<", ">", "|", " "
    def _createSecureHash(self, password):
       # Assert statements
       assert isinstance(password, Password), "The password must be of the Password type."
