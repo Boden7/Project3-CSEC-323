@@ -78,15 +78,14 @@ class TestCheckingAccount(unittest.TestCase):
     def test_write_transaction(self):
         # Test writing a transaction to the file with encryption: 
         print("Testing transaction write with encryption...")
-        transaction = "test transaction"  # Dummy transaction
-        self.account._writeTransaction(transaction)
-        # Ensure no errors during the write process
-    
-    def test_read_transaction(self):
-        # Test reading and decrypting transactions from file: 
-        print("Testing transaction read with decryption...")
-        self.account._readTransactions()
-        # Ensure no errors during the read process
+        transaction = Transaction('deposit', 100, 1.0)# Dummy transaction
+        # Convert the dummy transaction into a string and pass it in to the write function
+        transactionStr = transaction.__repr__()  
+        self.account._writeTransaction(transactionStr)
+        # Get the string back using readTransactions
+        returnStr = self.account._readTransactions()
+        # Ensure the values are equal
+        self.assertEqual(returnStr, transactionStr)
 
     def test_get_next_transaction_number(self):
         print("Testing getting the next transaction number")
