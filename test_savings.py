@@ -71,7 +71,6 @@ class TestSavings(unittest.TestCase):
     # Test transfer between accounts
     def test_transfer(self):
         self.account._balance = 1000.0
-        self.account2._balance = 500.0
         success = self.account.transfer(200.0, self.account2)
         self.assertTrue(success)
         self.assertEqual(self.account.getBalance(), 800.0)
