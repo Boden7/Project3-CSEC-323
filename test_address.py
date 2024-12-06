@@ -8,7 +8,6 @@ Test each method with at least one unit test
 """
 
 import unittest
-from unittest.mock import patch
 from address import Address
 
 class TestAddress(unittest.TestCase):
