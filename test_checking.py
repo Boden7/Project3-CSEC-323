@@ -8,7 +8,6 @@ Test each method with at least one unit test
 """
 
 import unittest
-from checkingAccount import CheckingAccount
 from transaction import Transaction
 
 class TestChecking(unittest.TestCase):
