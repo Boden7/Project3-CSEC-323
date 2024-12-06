@@ -8,7 +8,6 @@ Test each method with at least one unit test
 """
 
 import unittest
-from unittest.mock import patch
 from phoneNumber import PhoneNumber
 
 class TestPhoneNumber(unittest.TestCase):
