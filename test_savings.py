@@ -1,5 +1,11 @@
-# Testers for the SavingsAccount class:
-# @authors: Hunter Peacock 
+""" 
+This module defines the tester for the Savings Account class.
+@author: Hunter Peacock
+@date: November 3, 2024
+
+Import the unittest module and the SavingAccount module
+Test each method with at least one unit test
+"""
 
 import unittest
 from savingsAccount import SavingsAccount
