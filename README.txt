@@ -23,10 +23,10 @@ Required libraries: unittest, os, cryptography (for encryption/decryption of tra
 
 ------------------------------ USAGE --------------------------
 Downloading the project:
-Files needed: AES_CBC.py, address.py, bankAccount.py, checkingAccount.py, client.py, name.py, phoneNumber.py, savingsAccount.py, transaction.py, Password.py
+Files needed: AES_CBC.py, address.py, bankAccount.py, checkingAccount.py, client.py, name.py, phoneNumber.py, savingsAccount.py, transaction.py, password.py
 Download the files from the project's repository: https://github.com/Boden7/Project2-CSEC-323
 
-Files needed for testing: AddressTester.py, NameTester.py, PhoneNumberTester.py, bankAccountTester.py, checkingTester.py, clientTester.py, savingsTester.py, transactionTester.py
+Files needed for testing: test_address.py, test_checking.py, test_client.py, test_name.py, test_password.py, test_phoneNumber.py, test_savings.py, test_transaction.py
 
 Creating and Managing Clients:
 To create a new client and assign them a bank account, you can follow this example:
@@ -36,16 +36,16 @@ from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
 
 # Create a new client
-client1 = Client(name = "FirstName LastName", phone = "1234567890", street = "123 Main St", city = "City", state = "VA")
+client1 = Client(Name("First", "Last"), Address("100 Street", "City", "VA"), PhoneNumber("8041234567"), "checking", Password("Tester123!"))
 
 # Display client information
 client1.__repr__()
 
 # Open a checking account
-checking_account = CheckingAccount(balanceIn = 500.0)
+checking_account = CheckingAccount(accountNum from Client, clientNum from Client, balanceIn = 500.0)
 
 # Open a savings account
-savings_account = SavingsAccount(balanceIn = 1000.0)
+savings_account = SavingsAccount(accountNum from Client, clientNum from Client, balanceIn = 1000.0)
 
 # Add accounts to the client
 client1.openBankAccount(checking_account)
@@ -64,7 +64,8 @@ Attributes:
 name (first and last names, validated for length and format)
 phone (must be a valid 10 digit phone number)
 address (street, city, valid state abbreviation)
-_clientNumber (unique, starting from 100 and incrementing upon each new client creation)
+password (client password, validated for length and no special characters)
+_clientCounter (unique, starting from 100 and incrementing upon each new client creation)
 A list of associated bank accounts.
 
 Methods:
@@ -72,6 +73,7 @@ __init__(): Initializes the client with valid details.
 __repr__(): Displays the client's information.
 openBankAccount(account): Adds a bank account to the client's list, if the account does not already exist.
 closeBankAccount(account): Withdraws all funds from the specified account and removes it from the list of accounts.
+changePassword(password): Changes the password of a Client.
 __eq__(): Compares two clients to see if they are the same. 
 
 ----------------------- Bank Account Classes ----------------------
@@ -102,10 +104,9 @@ The system performs several validations to ensure correct data entry:
 
 Client Name: The first name can be up to 25 characters, and the last name can be up to 40 characters. 
     Special characters are not allowed.
-Phone Number: Must be a 10-digit number and cannot start with 0.
+Phone Number: Must be a String that contains a 10-digit number and cannot start with 0.
 Address: (street, city, valid state abbreviation)
-Street: Cannot be empty, max of 30 characters, no special characters.
-City: Cannot be empty, max of 30 characters, no special characters.
-State: Must be a valid state abbreviation: VA, MD, NJ, PA, DE, NC, WV, DC
-
-
+   Street: Cannot be empty, max of 30 characters, no special characters.
+   City: Cannot be empty, max of 30 characters, no special characters.
+   State: Must be a valid state abbreviation: VA, MD, NJ, PA, DE, NC, WV, DC
+Password: Must be a String between 8 and 16 characters in length inclusive that does not contain specific special characters.
