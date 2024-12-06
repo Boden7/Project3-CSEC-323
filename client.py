@@ -14,7 +14,6 @@ from bankAccount import BankAccount
 from password import Password
 from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
-from AES_CBC import encrypt_AES_CBC
 import os
 import hashlib
 
