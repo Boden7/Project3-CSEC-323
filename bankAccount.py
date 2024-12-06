@@ -7,8 +7,7 @@ A class to represent the data elements and methods required to implement a Bank 
 """
 
 # Import statements
-from transaction import Transaction
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 class BankAccount:
     # A private class variable that holds the interest rates in decimal form 
