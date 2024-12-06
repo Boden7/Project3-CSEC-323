@@ -84,7 +84,6 @@ class TestChecking(unittest.TestCase):
         self.account.deposit(50.0)
         self.account.withdraw(20.0)
         transactions = self.account.printTransactionList()
-        print(transactions)
         self.assertEqual(transactions, "Transaction # 100, amount = $50.00, date 2024-12-06, type: deposit\nTransaction # 101, amount = $20.00, date 2024-12-06, type: withdrawal")
     
     def test_transaction_listing_empty(self):
