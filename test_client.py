@@ -18,6 +18,8 @@ from password import Password
 from checkingAccount import CheckingAccount
 from savingsAccount import SavingsAccount
 from bankAccount import BankAccount
+import os
+import hashlib
 
 class TestClient(unittest.TestCase):
     # The setup method initializes a client to be used for
@@ -335,6 +337,39 @@ class TestClient(unittest.TestCase):
         self.assertEqual(self.client1.getNextAccountNumber(), 1001)
         self.client1.openBankAccount('checking', 0.0)
         self.assertEqual(self.client1.getNextAccountNumber(), 1002)
+
+    # An overencompassing test that determines if changePassword is working properly
+    def test_changePassword(self):
+        # Stores the original hash to compare to the new one
+        oldHash = self.client1._hash
+        
+        print()
+        print("1) Enter the invalid client password tester123. This should prompt you to re-enter the current password.")
+        print("2) Enter the valid client password Tester123!, which should allow you to move on.")
+        print("3) Enter the invalid new password short. This should prompt you to enter a password that meets the requirements.")
+        print("4) Enter the invalid new password longlonglonglonglong. This should prompt you to enter a password that meets the requirements.")
+        print("5) Enter the invalid new password test/. This should prompt you to enter a password that meets the requirements.")
+        print("6) Enter the valid new password Tester123!!. This should prompt you to re-enter the new password.")
+        print("7) Enter the non-matching password Tester123!. This should prompt you to enter and re-enter the new password again.")
+        print("8) Enter the valid new password Tester123!! two times when prompted. This should allow the password to be changed.")
+        self.client1.changePassword()
+        
+        # Checks to ensure that the old and new hashes are different
+        self.assertNotEqual(oldHash, self.client1._hash)
+        
+        # Initializes a String to hold what the new password should be
+        newPass = "Tester123!!"
+        
+        # Determines what the correct hash should be
+        correctHash = hashlib.pbkdf2_hmac(
+           self.client1._hash_algo,
+           newPass.encode('utf-8') + Client.PEPPER.encode('utf-8'),  
+           self.client1._salt,
+           self.client1._iterations
+       )
+        
+        # Checks to ensure that the new hash is equal to the correct hash value of the new password
+        self.assertEqual(self.client1._hash, correctHash)
 
 if __name__ == '__main__':
     unittest.main()
