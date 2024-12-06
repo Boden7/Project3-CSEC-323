@@ -70,7 +70,7 @@ A list of associated bank accounts.
 
 Methods:
 __init__(): Initializes the client with valid details.
-__repr__(): Displays the client's information.
+__repr__(): Displays the client's information, excluding their password.
 openBankAccount(account): Adds a bank account to the client's list, if the account does not already exist.
 closeBankAccount(account): Withdraws all funds from the specified account and removes it from the list of accounts.
 changePassword(password): Changes the password of a Client.
@@ -109,4 +109,5 @@ Address: (street, city, valid state abbreviation)
    Street: Cannot be empty, max of 30 characters, no special characters.
    City: Cannot be empty, max of 30 characters, no special characters.
    State: Must be a valid state abbreviation: VA, MD, NJ, PA, DE, NC, WV, DC
-Password: Must be a String between 8 and 16 characters in length inclusive that does not contain specific special characters.
+Password: Must be a String between 8 and 16 characters in length inclusive that does not contain blank characters
+or explicitly specified special characters shown in the password parameters.
