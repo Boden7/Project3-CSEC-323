@@ -19,7 +19,7 @@ class TestCheckingAccount(unittest.TestCase):
         self.clientNum = 100
         self.account = CheckingAccount(self.accountNum, self.clientNum, 100.0)  # Initial balance of 100.0
         self.accountNum += 1
-        self.other_account = CheckingAccount(self.accountNum, self.clientNum, 50.0)  # Another account for transfer tests
+        self.otherAccount = CheckingAccount(self.accountNum, self.clientNum, 50.0)  # Another account for transfer tests
 
     def test_initialization(self):
         # Test account initialization with initial balance:
@@ -49,10 +49,10 @@ class TestCheckingAccount(unittest.TestCase):
     def test_transfer(self):
         # Test transferring funds to another account: 
         print("Testing transfer between accounts...")
-        success = self.account.transfer(20.0, self.other_account)
+        success = self.account.transfer(20.0, self.otherAccount)
         self.assertTrue(success)
         self.assertEqual(self.account.getBalance(), 80.0)
-        self.assertEqual(self.other_account.getBalance(), 70.0)
+        self.assertEqual(self.otherAccount.getBalance(), 70.0)
 
     def test_calculate_interest(self):
         # Test interest calculation and application to balance: 
@@ -69,6 +69,12 @@ class TestCheckingAccount(unittest.TestCase):
         transactions = self.account.printTransactionList()
         self.assertNotEqual(transactions, "There are no valid transactions to display.")
     
+    def test_transaction_listing_empty(self):
+        # Test printing the transaction list: 
+        print("Testing transaction listing...")
+        transactions = self.account.printTransactionList()
+        self.assertEqual(transactions, "There are no valid transactions to display.")
+    
     def test_write_transaction(self):
         # Test writing a transaction to the file with encryption: 
         print("Testing transaction write with encryption...")
@@ -81,6 +87,12 @@ class TestCheckingAccount(unittest.TestCase):
         print("Testing transaction read with decryption...")
         self.account._readTransactions()
         # Ensure no errors during the read process
+
+    def test_get_next_transaction_number(self):
+        print("Testing getting the next transaction number")
+        self.assertEqual(self.account.getNextTransactionNum(), 100)
+        self.account.deposit(1.0)
+        self.assertEqual(self.account.getNextTransactionNum(), 101)
 
 if __name__ == "__main__":
     unittest.main()
