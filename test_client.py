@@ -56,8 +56,30 @@ class TestClient(unittest.TestCase):
     def test_ConstructorInvalidAccountType(self):
         print("\nTesting to ensure the constructor properly throws an assertion with incorrect account type")
         
-        self.assertRaises(AssertionError, Client, self.validName, self.validAddress, self.validPhone, 'neither', self.validPassword)    
+        self.assertRaises(AssertionError, Client, self.validName, self.validAddress, self.validPhone, 'neither', self.validPassword)
     
+    def test_ConstructorInvalidPassword(self):
+        print("\nTesting to ensure the constructor properly throws an assertion with incorrect password type")
+        
+        self.assertRaises(AssertionError, Client, self.validName, self.validAddress, self.validPhone, 'checking', "Password123!")
+    
+    def test_ConstructorProperHashing(self):
+        print("\nTesting to ensure the constructor properly hashes the password")
+        
+        # Initializes a String to hold what the current password should be
+        currentPass = "Tester123!"
+        
+        # Determines what the correct hash should be
+        correctHash = hashlib.pbkdf2_hmac(
+           self.client1._hash_algo,
+           currentPass.encode('utf-8') + Client.PEPPER.encode('utf-8'),  
+           self.client1._salt,
+           self.client1._iterations
+       )
+        
+        # Checks to ensure that the new hash is equal to the correct hash value of the new password
+        self.assertEqual(self.client1._hash, correctHash)        
+            
     def test_ConstructorSetFirstName(self):
         print("\nTesting to ensure the constructor can properly set the first name") 
         
@@ -151,6 +173,35 @@ class TestClient(unittest.TestCase):
         # Ensures the client account list matches the expected list 
         # ** ADD PROPER CHECK HERE
         self.assertEqual(checkClientAccounts, expected)
+    
+    # We tried
+    #def test_ConstructorReprEmpty(self):
+    #    print("\nTesting to ensure the repr can correctly close the program when a client doesn't have an account") 
+    #    
+    #    # Ensures the Client object can properly represent the client as a string
+    #    self.assertRaises(AssertionError, self.client1.__repr__())
+    
+    # We tried
+    #def test_ConstructorRepr(self):
+    #    print("\nTesting to ensure the constructor can properly list the info of a client with at least one bank account") 
+    #            
+    #    checkRepr = str(self.client1)
+    #    self.client1.openBankAccount("checking", 0.0)
+
+        #compareStr = (f"Client Number: 100\n"
+        #              f"Name: First Last\n"
+        #                        f"Phone Number: +1(804)123-4567\n"
+        #                        f"Address: 100 Street, City, VA\n"
+        #                        f"Bank Accounts:\n"
+        #                        f"Account Number: 1000\n"
+        #                        f"Balance: 0.00\n"
+        #                        f"Account Type: 'checking'\n"
+        #                        f"Transactions:\n"
+        #                        f"There are no valid transactions to display."
+        #                        )
+        
+        # Ensures the Client object can properly represent the client as a string
+        #self.assertEqual(checkRepr, compareStr)    
     
     def test_EqualityTrue(self):
         print("\nTesting to ensure that equality works when two clients are equal") 
@@ -308,9 +359,10 @@ class TestClient(unittest.TestCase):
         self.assertEqual(self.client1.getNextAccountNumber(), 1001)
         self.client1.openBankAccount('checking', 0.0)
         self.assertEqual(self.client1.getNextAccountNumber(), 1002)
-
-    # An overencompassing test that determines if changePassword is working properly
+    
     def test_changePassword(self):
+        print("An overencompassing test that determines if changePassword is working properly")
+        
         # Stores the original hash to compare to the new one
         oldHash = self.client1._hash
         
