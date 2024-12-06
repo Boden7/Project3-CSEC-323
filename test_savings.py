@@ -8,6 +8,7 @@ Test each method with at least one unit test
 """
 
 import unittest
+from transaction import Transaction
 from savingsAccount import SavingsAccount
 
 class TestSavings(unittest.TestCase):
@@ -121,30 +122,17 @@ class TestSavings(unittest.TestCase):
         transactions = self.account.printTransactionList()
         self.assertEqual(transactions, "There are no valid transactions to display.")
     
-    def test_write_transaction(self):
-        # Deposit a valid positive amount
-        print("Testing valid transaction writing")
-        success = self.account.deposit(50.0)
-        self.assertTrue(success)
-        self.assertEqual(self.account.getBalance(), 50.0)
-        
-        # Test writing a transaction to the file with encryption:
-        print("Testing transaction write with encryption...")
-        transaction = "test transaction"  # Dummy transaction
-        self.account._writeTransaction(transaction)
-        # Ensure no errors during the write process
-    
-    def test_read_transaction(self):
-        # Deposit a valid positive amount
-        print("Testing reading transactions")
-        success = self.account.deposit(50.0)
-        self.assertTrue(success)
-        self.assertEqual(self.account.getBalance(), 50.0)
-        
-        # Test reading and decrypting transactions from file: 
-        print("Testing transaction read with decryption...")
-        self.account._readTransactions()
-        # Ensure no errors during the read process
+    def test_write_and_read_transaction(self):
+        # Test writing a transaction to the file with encryption: 
+        print("Testing transaction write with encryption and reading it back...")
+        transaction = Transaction('deposit', 100, 1.0)# Dummy transaction
+        # Convert the dummy transaction into a string and pass it in to the write function
+        transactionStr = transaction.__repr__()  
+        self.account._writeTransaction(transactionStr)
+        # Get the string back using readTransactions
+        returnStr = self.account._readTransactions()
+        # Ensure the values are equal
+        self.assertEqual(returnStr, transactionStr)
 
     # Test transaction logging in the list with transaction
     def test_transaction_logging(self):
