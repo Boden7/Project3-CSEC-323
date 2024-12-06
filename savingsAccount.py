@@ -12,6 +12,7 @@ This class is inherited from the BankAccount superclass
 from bankAccount import BankAccount
 from transaction import Transaction
 from AES_CBC import encrypt_AES_CBC, decrypt_AES_CBC
+import os
 
 # Hunter 
 class SavingsAccount(BankAccount):
@@ -30,6 +31,10 @@ class SavingsAccount(BankAccount):
     def __init__(self, accountNum, clientNum, balanceIn = 0.0, accountType = 'savings'):
         super().__init__(accountNum, clientNum, balanceIn, accountType)
         self._overdrawnCount = 0  # Counter for overdrafts (savings only)
+        # Encryption key (Ensure the key is 16, 24, or 32 bytes for AES-128, AES-192, or AES-256)
+        self._key = os.urandom(32)
+        # Initialization vector (Ensure the IV is 16 bytes)
+        self._iv = os.urandom(16)
 
     # An accessor/getter method for the overdraft fee
     #
@@ -163,10 +168,9 @@ class SavingsAccount(BankAccount):
     def _writeTransaction(self, transaction: Transaction):
         # Set the Debug Flag
         DEBUG = False
-        # Encryption key (Ensure the key is 16, 24, or 32 bytes for AES-128, AES-192, or AES-256)
-        key = b'MySuperSecretKey1222222222222222'
-        # Initialization vector (Ensure the IV is 16 bytes)
-        iv = b'MySuperSecretIV1'
+
+        key = self._key
+        iv = self._iv
 
         if DEBUG:
             print("The length of the key is %d bytes" % len(key))
@@ -197,8 +201,8 @@ class SavingsAccount(BankAccount):
     def _readTransactions(self):
         # Set the Debug Flag
         DEBUG = False
-        key = b'MySuperSecretKey1222222222222222'
-        iv = b'MySuperSecretIV1'
+        key = self._key
+        iv = self._iv 
 
         # Open the file to read the data
         fileName = f"savings-{self._clientNum}-{self._accountNum}.txt"
