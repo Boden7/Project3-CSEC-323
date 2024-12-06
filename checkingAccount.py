@@ -17,7 +17,10 @@ class CheckingAccount(BankAccount):
 
     # Constructs a CheckingAccount object.
     #
-    #  @param balanceIn: The starting balance of the CHecking Account (Floating point)
+    #  @param accountNum: The account number of the Checking Account (int)
+    #  @param clientNum: The Client number of the Checking Account (int)
+    #  @param balanceIn: The starting balance of the Checking Account (Floating point; default is 0.0)
+    #  @param account_type: The account type of the Checking Account (String; default is 'checking')
     #
     #  @ensure CheckingAccount object successfully created
     def __init__(self, accountNum, clientNum, balanceIn = 0.0, accountType = 'checking'):
