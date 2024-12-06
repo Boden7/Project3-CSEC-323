@@ -17,13 +17,15 @@ from savingsAccount import SavingsAccount
 from AES_CBC import encrypt_AES_CBC
 import os
 import hashlib
-import getpass
 
 # Hunter
 class Client:
 
    # Declares the class variables
    PEPPER = "SHELBY_MADE"
+   PASS_MIN_LEN = 8
+   PASS_MAX_LEN = 16
+   INVALID_Char = {"/", "\\", "<", ">", "|", " "}  #Use a set, not a list   
    clientCounter = 100 # client number set to monotonically increase
    
    # Constructs a Client object.
@@ -62,23 +64,8 @@ class Client:
       # Initializes the list of bank accounts as empty
       self._bankAccounts = []
             
-      # Initializes the client's hashed password (stored in the variable, but
-      # not saved as an instance variable)
-      hashVal = self._createSecureHash(password)
-      
-      # Creates the file name based on the client's client number
-      fileName = str(self._clientNumber) + "_password"      
-      
-      # Writes the hashed password value to its own file
-      # Open the file to write the data
-      with open(fileName, "wb") as outfile:
-         # Write the length of the encrypted password to the file
-         outfile.write(str(len(hashVal)).encode())
-         outfile.write(b"\n")
-         
-         # Write the encrypted password to the file
-         outfile.write(hashVal)
-         outfile.write(b"\n")
+      # Initializes the client's hashed password and salt value
+      self._createSecureHash(password)
       
       # Creates an empty (balance = 0) banking account instance of the account type passed in
       if accountType == 'checking':
@@ -111,14 +98,14 @@ class Client:
            self._iterations
        ) 
       
-      # Returns the hash value
-      return hash_value
+      # Stores the hash
+      self._hash = hash_value
    
-   # A private method to check a password against the stored hash.
+   # A private method to check an entered password against the stored hash
    #
    # @param password: The string passed in containing the password to check
    # We did not use the Password class here due to it containing assertion errors
-   def _checkPassword(self, password):
+   def _checkPasswordMatch(self, password):
       #Assertions to check password type, length, and syntax
       if not isinstance(password, str):
          return False
@@ -138,20 +125,78 @@ class Client:
       # Compare the computed hash and the stored hash and return the result
       return (passswordHash == self._hash)   
    
+   # A private method to check if an entered password is valid/meets the requirements
+   #
+   # @param password: The string passed in containing the password to check
+   # We did not use the Password class here due to it containing assertion errors
+   def _checkPasswordReqs(self, password):
+      #Assertions to check password type, length, and syntax
+      if not isinstance(password, str):
+         return False
+      if len(password) < Client.PASS_MIN_LEN or len(password) > Client.PASS_MAX_LEN:
+         return False
+      if not _checkSyntax(password):
+         return False
+      
+      # If the password is valid
+      return True
+   
    # A method to allow the user to change their password. The user must first
    # enter their old password, then enter a valid new password twice.
    def changePassword(self):
-      # Initializes a boolean to keep track of whether the
+      # Initializes a boolean to keep track of whether the passwords match or not
       matchingPass = False
       
       # Loops while the client's password and entered password are different
+      # The client will be re-prompted to enter their password if it is entered incorrectly
       while not matchingPass:
          # Prompts the user to enter their old password
-         userPass = getpass("Enter your current password: ")
+         userPass = input("Enter your current password: ")
          
-         # Determines if the
-         hashVal = self._checkPass(userPass)     
-    
+         # Determines if the passwords match or not
+         matchingPass = self._checkPasswordMatch(userPass)
+         
+         if not matchingPass:
+            print("Incorrect password! Please try again.")
+         
+      # Initializes a boolean to keep track of whether the password has been updated or not
+      updated = False
+      
+      # Loops while the client's new password is invalid
+      while not updated:
+         # Prompts the user to enter a new password
+         userPass = input("Enter your new password: ")
+         
+         # Determines if the passwords match or not
+         validNew = self._checkPasswordReqs(userPass)
+         
+         # If the password is a valid possible password
+         if validNew:
+            # Prompts the user to re-enter their new password
+            userPass2 = input("Re-enter your new password: ")
+            
+            # If the passwords match
+            if userPass == userPass2:
+               # Sets the password to be of the Password class
+               # Also serves as an extra check that the requirements are met
+               password = Password(userPass)
+               
+               # Hashes the new password with a new salt value and saves
+               # the new instance variables
+               self._createSecureHash(password)
+               
+               # Ends the user loop
+               updated = True
+               
+               print("Password successfully changed!")
+               
+            # If the passwords do not match, loops again in case there was a typo in the original password
+            else:
+               print("Passwords do not match! Please enter and re-enter your new password again.")
+         # If the password is not a valid possible password, loops again after an error message is printed
+         else:
+            print("Invalid Password! Please enter a password that meets the requirements.")
+          
    # Method to write and store client passwords for their accounts to a file
    # Data is encrypted first
    #  @param password: The password to be written to the file
@@ -351,3 +396,19 @@ class Client:
       
       # Compare immutable variables
       return (self._clientNumber == other._clientNumber)
+
+# A private helper function to check the password for prohibited characters
+#
+#  @param password: The password to check for invalid characters (String)
+def _checkSyntax(password):
+   # Sets a boolean
+   result = True
+       
+   # Loops through every single character within the password
+   for element in password:
+      # Determines the result based on the previous result and if there
+      # is an invalid character within the password or not
+      result = result and element not in Password.bad_Chars
+        
+   # Returns the result
+   return result
