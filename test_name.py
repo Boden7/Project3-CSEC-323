@@ -8,7 +8,6 @@ Test each method with at least one unit test
 """
 
 import unittest
-from unittest.mock import patch
 from name import Name
 
 class TestName(unittest.TestCase):
