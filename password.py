@@ -6,9 +6,6 @@ This module defines the Password class.
 A class to represent the data elements and methods required to implement a Password
 """
 
-import os 
-import hashlib
-
 class Password:
     # Defines the Class Constants
     PASS_MIN_LEN = 8
