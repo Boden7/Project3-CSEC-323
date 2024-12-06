@@ -123,8 +123,8 @@ class TestSavings(unittest.TestCase):
         self.assertEqual(transactions, "There are no valid transactions to display.")
 
     def test_deposit_write_and_read_transaction(self):
-         # Test writing a transaction to the file with encryption: 
-        print("Testing withdrawal transaction write with encryption and reading it back...")
+        # Test writing a transaction to the file with encryption through the deposit method: 
+        print("Testing deposit transaction write with encryption and reading it back...")
         self.account.deposit(1.0)
         # Get the string back using readTransactions
         returnStr = self.account._readTransactions()
